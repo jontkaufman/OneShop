@@ -60,6 +60,8 @@ test('users cannot grant themselves access or delegate privileges they lack',()=
  assert.equal(mayAssignPermission({actorAccess:admin,permission:'ro.create',mode:'allow',targetIsSelf:true}),false);
  assert.equal(mayAssignPermission({actorAccess:admin,permission:'warranty.manage',mode:'allow'}),false);
  assert.equal(mayAssignPermission({actorAccess:admin,permission:'payroll.read',mode:'allow'}),false);
+ assert.equal(mayAssignPermission({actorAccess:admin,permission:'finance.read',mode:'allow'}),true);
+ assert.equal(mayAssignPermission({actorAccess:admin,permission:'customer.contact.read',mode:'allow'}),true);
  assert.equal(mayAssignPermission({actorAccess:admin,permission:'ro.create',mode:'allow'}),true);
 });
 test('owner may override sensitive grants to others, not change own grants',()=>{
