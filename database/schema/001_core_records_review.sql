@@ -87,7 +87,6 @@ create table public.customers (
   organization_id uuid not null references public.organizations(id) on delete restrict,
   display_name text not null check (btrim(display_name) <> ''),
   account_type text not null default 'person' check (account_type in ('person','business','internal')),
-  notes_private text,
   created_at timestamptz not null default now(),
   archived_at timestamptz,
   unique (organization_id,id)
@@ -405,7 +404,7 @@ create policy identifier_profile_update on public.role_identifier_profiles
 revoke all on public.organizations,public.branches,public.staff_memberships,
   public.customers,public.customer_contacts,public.units,public.unit_customer_relationships,
   public.onsite_visits,public.repair_orders,public.ro_line_items,public.activity_events,
-  public.role_identifier_profiles from public,authenticated;
+  public.role_identifier_profiles from public,anon,authenticated;
 grant select on public.organizations,public.branches,public.staff_memberships,
   public.customers,public.customer_contacts,public.units,public.unit_customer_relationships,
   public.onsite_visits,public.repair_orders,public.ro_line_items,public.activity_events,
