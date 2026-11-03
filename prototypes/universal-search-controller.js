@@ -142,7 +142,7 @@ function selectGlobalSearchResult(item){
  $('unit-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 $('global-search-input').addEventListener('focus',()=>{if(!globalSearchOpen)openGlobalSearch()});
-$('global-search-input').addEventListener('input',()=>{if(!globalSearchOpen)openGlobalSearch();renderGlobalSearch();});
+$('global-search-input').addEventListener('input',()=>{if(!globalSearchOpen){const typed=$('global-search-input').value;openGlobalSearch();$('global-search-input').value=typed;}renderGlobalSearch();});
 $('open-global-search').onclick=()=>openGlobalSearch('all');
 $('ro-open-global-search').onclick=()=>openGlobalSearch('select_unit');
 $('global-search-close').onclick=()=>closeGlobalSearch();
