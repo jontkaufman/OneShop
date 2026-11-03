@@ -1,7 +1,118 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OneShop | Intake to Storage Prototype</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>OneShop | Intake to Storage Prototype</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#1a293a;background:#f4f6f8;--ink:#23374a;--muted:#6d7e8c;--border:#dce3e9;--navy:#162a3a;--blue:#226c9c;--soft:#eaf2f7;--green:#1c745d;--warn:#a36c19}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}.app{display:grid;grid-template-columns:222px 1fr;min-height:100vh}.sidebar{background:var(--navy);color:#ccd7e1;padding:24px 14px}.brand{font-size:22px;letter-spacing:-.6px;font-weight:750;color:white;padding:0 12px 18px}.brand span{color:#77b5dc}.side-label{padding:18px 13px 8px;text-transform:uppercase;letter-spacing:1.4px;font-size:10px;font-weight:800;opacity:.53}.nav-btn{width:100%;color:#d6e0e8;border:0;text-align:left;background:transparent;padding:12px 13px;border-radius:8px;margin:2px 0;font-weight:600;font-size:13px}.nav-btn.active,.nav-btn:hover{background:#284358;color:white}.aside-note{margin:40px 10px 0;border:1px solid #3a5669;color:#b8cad5;border-radius:10px;padding:12px;line-height:1.5;font-size:11px}.main{min-width:0}.topbar{height:66px;background:white;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:0 34px}.crumb{font-size:12px;color:#688091}.topbar b{color:#223a4b}.pilot{font-size:11px;background:#fff7e5;color:#835b19;border:1px solid #efd8a8;padding:7px 10px;border-radius:6px;font-weight:700}.content{max-width:1240px;margin:0 auto;padding:32px 34px 80px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:#6d889c;font-weight:800;text-transform:uppercase;margin-bottom:7px}h1{font-size:27px;letter-spacing:-.7px;margin:0 0 9px}h2{font-size:19px;letter-spacing:-.4px;margin:0 0 7px}h3{font-size:14px;margin:0 0 10px}.subtitle{font-size:13px;color:var(--muted);margin-bottom:25px;max-width:750px;line-height:1.6}.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:23px;box-shadow:0 3px 18px #1c314407}.card+.card{margin-top:16px}.card-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px}.muted{color:var(--muted);font-size:12px;line-height:1.55}.small{font-size:11px}.steps{display:flex;align-items:center;gap:8px;margin:0 0 20px}.step{flex:1;display:flex;gap:9px;align-items:center;border-bottom:3px solid #dfe7ec;padding:12px 3px;color:#8b9aa6;font-size:12px;font-weight:700}.step span{width:23px;height:23px;display:grid;place-items:center;border-radius:50%;background:#e8eef2}.step.active{color:#276f9c;border-color:#276f9c}.step.active span{background:#dceefa}.step.done{color:#34765e;border-color:#75b29b}.step.done span{background:#dcf2e8}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.field{margin-bottom:16px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid #ccd7df;border-radius:7px;padding:11px 12px;color:#20364a;background:white;font-size:13px;min-height:42px}.field textarea{min-height:85px;resize:vertical}.hint{margin:6px 0 0;font-size:11px;color:#83939f;line-height:1.4}.seg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:21px}.seg button{text-align:left;border:1px solid #d9e2e8;background:#fff;border-radius:10px;padding:16px}.seg button.selected{border-color:#407c9b;background:#edf6fb;box-shadow:inset 0 0 0 1px #407c9b}.seg strong{display:block;font-size:13px;margin-bottom:6px}.seg span{display:block;font-size:11px;color:#758594;line-height:1.5}.btn{padding:11px 16px;border-radius:7px;background:white;color:#284357;border:1px solid #bacbd6;font-size:12px;font-weight:750}.btn.primary{background:#1b638f;color:white;border-color:#1b638f}.btn.secondary{background:#eaf2f7;color:#225c80;border-color:#cbdde9}.btn.danger{color:#99531b;border-color:#e9caaa}.actions{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid #e7edf1;gap:12px}.right{display:flex;gap:8px}.callout{border-left:3px solid #3183b8;background:#eef6fb;padding:14px 16px;border-radius:0 7px 7px 0;font-size:12px;line-height:1.6;margin:8px 0 20px}.callout strong{display:block;color:#20587b}.callout.warning{background:#fffaee;border-color:#b9872c}.two-col{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:18px}.flag{border-radius:15px;padding:5px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;background:#e9f3e9;color:#2c7a53;display:inline-block}.flag.pending{background:#fff5db;color:#92631a}.flag.blue{background:#e5f2fa;color:#1b689c}.stat{padding:13px;background:#f4f7f9;border:1px solid #e1e8ed;border-radius:7px}.stat span{display:block;font-size:11px;color:#8797a3}.stat strong{font-size:14px;color:#263d4e}.ro-row{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid #edf1f4}.line{background:#f8fafb;padding:11px 12px;margin-top:8px;border-left:2px solid #c8dae5;border-radius:4px;font-size:12px}.list{margin:0;padding:0;list-style:none}.list li{padding:12px 0;border-bottom:1px solid #e9eff2;font-size:12px}.timeline{position:relative;padding:6px 0 6px 22px;margin-left:9px;border-left:2px solid #d2e1ea}.timeline-card{position:relative;margin:10px 0 23px;border:1px solid #dbe5eb;border-radius:9px;padding:15px 18px}.timeline-card:before{position:absolute;content:"";left:-29px;top:19px;width:12px;height:12px;border:3px solid white;background:#2d719a;border-radius:50%;box-shadow:0 0 0 2px #a7c9dc}.timeline-card.future:before{background:#c48a2c;box-shadow:0 0 0 2px #e9cf9d}.timeline-header{display:flex;align-items:center;justify-content:space-between;gap:15px}.timeline-title{font-weight:750;font-size:13px}.event{display:flex;gap:10px;border-top:1px solid #e8eef2;padding:10px 0;font-size:12px}.event time{width:86px;flex:0 0 86px;color:#8294a3}.event b{font-weight:750}.event .muted{margin-top:3px}.timeline-inner{margin-top:13px;padding-top:5px;border-top:1px solid #e8eef2}.pill{padding:5px 8px;border:1px solid #d8e5ec;border-radius:16px;font-size:10px;font-weight:750;color:#547185;background:#f8fbfd}.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}.kpi .card{padding:15px}.kpi strong{display:block;font-size:21px}.kpi span{font-size:11px;color:#8293a2}.message{padding:12px 14px;background:#ecf7f1;border:1px solid #c9e5d2;color:#2c7352;border-radius:7px;font-size:12px;margin:0 0 16px}.error{padding:12px 14px;background:#fff1ed;border:1px solid #f0c5b7;color:#9a3a24;border-radius:7px;font-size:12px;margin:0 0 16px}.queue-card{border:1px solid #dae5ec;border-radius:10px;padding:16px;margin-bottom:14px}.queue-top{display:flex;align-items:center;justify-content:space-between;gap:14px}.queue-card h3{margin:7px 0 6px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.empty{padding:40px 24px;text-align:center;border:1px dashed #cad8e2;border-radius:9px;color:#718596;font-size:13px;line-height:1.6}.unitcard{display:flex;justify-content:space-between;gap:14px;padding:14px;border:1px solid #dfe8ed;border-radius:9px;margin-bottom:10px}.tagline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.divider{height:1px;background:#e7edf2;margin:14px 0}.hide{display:none!important}.inline{display:flex;gap:10px;align-items:center}.backlink{color:#276f9c;border:0;background:none;padding:0;font-size:12px;font-weight:750}.badge-outline{background:#f0f5f8;border:1px solid #d7e4ec;border-radius:16px;color:#46647b;padding:5px 10px;font-size:11px}.subtitle strong{color:#344a5c}@media(max-width:1030px){.app{grid-template-columns:65px 1fr}.brand{font-size:19px;padding-left:0}.brand span{display:none}.nav-btn{font-size:0}.nav-btn:before{content:attr(data-icon);font-size:18px}.side-label,.aside-note{display:none}.sidebar{padding:18px 8px}.content{padding:25px 20px}.topbar{padding:0 20px}}@media(max-width:730px){.grid2,.grid3,.two-col,.seg,.kpi{grid-template-columns:1fr}.steps{flex-wrap:wrap}.step{min-width:46%;font-size:11px}.content{padding:22px 13px}.topbar{height:58px;padding:0 13px}.card{padding:16px}.card-head{display:block}.timeline{padding-left:16px}.timeline-header{align-items:flex-start}.pilot{font-size:9px}.actions{flex-direction:column-reverse;align-items:stretch}.right{width:100%}.right .btn{flex:1}.event time{width:66px;flex-basis:66px}}
+
+/* READABILITY PASS v0.2 — deliberate light operational theme, not OS-dependent. */
+:root {
+  color-scheme: light;
+  --ink: #162b3e;
+  --muted: #4d6072;
+  --border: #c8d5df;
+  --navy: #142b40;
+  --blue: #0d5a8a;
+  --soft: #e7f2fa;
+  --green: #165e4b;
+  --warn: #83510e;
+  color: var(--ink);
+  background: #eff3f7;
+  font-size: 14px;
+}
+html,body { background: #eff3f7; }
+body { color: var(--ink); line-height: 1.5; }
+button,input,select,textarea { font: inherit; color: var(--ink); }
+button { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #0b72ab !important; outline-offset: 3px; }
+a, .backlink { color: #064e7a; }
+::selection { background: #b4dced; color: #10283c; }
+.sidebar { background: var(--navy); color: #f1f6fa; }
+.brand { color: #ffffff; }
+.brand span { color: #a4ddfa; }
+.side-label { color: #bfcedb; opacity: 1; font-size: 11px; letter-spacing: 1.1px; }
+.nav-btn { color: #e5eef5; font-size: 14px; }
+.nav-btn:hover, .nav-btn.active { color: #ffffff; background: #31536c; }
+.nav-btn.active { box-shadow: inset 3px 0 0 #9fdbff; }
+.aside-note { color: #e0eaf0; border-color: #47667f; font-size: 12px; }
+.topbar { border-color: var(--border); }
+.crumb { color: #405a6d; font-size: 13px; }
+.topbar b { color: #172f43; }
+.pilot { background: #fff2d5; color: #70430c; border-color: #d7a857; font-size: 11px; }
+.eyebrow { color: #275877; font-size: 12px; }
+h1,h2,h3 { color: #152a3d; }
+h1 { font-size: 29px; }
+h2 { font-size: 21px; }
+h3 { font-size: 16px; }
+.subtitle { color: #405468; font-size: 14px; }
+.subtitle strong { color: #1c364d; }
+.card { border-color: var(--border); box-shadow: 0 2px 12px rgb(27 53 72 / 5%); }
+.muted { color: var(--muted); font-size: 13px; }
+.small { font-size: 12px; }
+.step { color: #4b6070; border-color: #c1cfdb; font-size: 13px; }
+.step span { background: #dfe8ef; color: #2a475d; font-weight: 800; }
+.step.active { color: #095b8d; border-color: #0d6398; }
+.step.active span { color: #084f7b; background: #d5eaf8; }
+.step.done { color: #186348; border-color: #288364; }
+.step.done span { color: #15533c; background: #d8f0e6; }
+.field label { color: #22374a; font-size: 13px; }
+.field input,.field select,.field textarea { color: #132c41; background: #fff; border: 1.5px solid #98afc0; border-radius: 7px; font-size: 14px; min-height: 44px; }
+.field input::placeholder,.field textarea::placeholder { color: #566d7d; opacity: 1; }
+.field input:hover,.field select:hover,.field textarea:hover { border-color: #557f9b; }
+.field input:focus,.field select:focus,.field textarea:focus { border-color: #0d6499; box-shadow: 0 0 0 3px #0d649921; outline: none; }
+.hint { color: #53687b; font-size: 12px; }
+.seg button { color: #172c3c; background: #fff; border: 1.5px solid #b3c7d5; }
+.seg button:hover { background: #f4f9fc; border-color: #5d90af; }
+.seg button.selected { color: #0f344c; background: #e1f1fa; border-color: #0d6398; box-shadow: inset 0 0 0 1px #0d6398; }
+.seg strong { color: inherit; font-size: 14px; }
+.seg span { color: #405c71; font-size: 12px; }
+.btn { color: #173c55; background: #fff; border: 1.5px solid #94b0c3; padding: 11px 16px; font-size: 13px; }
+.btn:hover:not(:disabled) { background: #f1f7fb; border-color: #487d9d; }
+.btn.primary { background: #0c5f91; color: #fff; border-color: #0c5f91; }
+.btn.primary:hover:not(:disabled) { background: #094b75; border-color: #094b75; }
+.btn.secondary { background: #e6f2fa; color: #0d4c75; border-color: #9ac1d8; }
+.btn.secondary:hover:not(:disabled) { background: #d8ebf7; border-color: #5b91b0; }
+.btn.danger { color: #82390c; border-color: #b88c71; }
+.btn.danger:hover:not(:disabled) { background: #fff1e7; }
+button:disabled,.btn:disabled { color: #536b7b; background: #e6ebef; border-color: #bdc9d1; opacity: 1; cursor: not-allowed; }
+.callout { border-color: #0d6799; background: #e9f4fb; color: #19374b; font-size: 13px; }
+.callout strong { color: #0c547e; }
+.callout.warning { background: #fff4dc; color: #5f3b10; border-color: #ad700e; }
+.flag { background: #e0f2e7; color: #16583d; font-size: 11px; }
+.flag.pending { background: #fff2d1; color: #6d440c; }
+.flag.blue { background: #e0f0fa; color: #115a88; }
+.stat { background: #f5f8fa; border-color: #cddce5; }
+.stat span { color: #4c6174; font-size: 12px; }
+.stat strong { color: #1b3549; font-size: 15px; }
+.ro-row,.list li { border-color: #dbe5eb; font-size: 13px; }
+.line { background: #f2f7fa; color: #1e3546; border-color: #94b9ce; font-size: 13px; }
+.timeline { border-color: #b3cddf; }
+.timeline-card,.queue-card,.unitcard { border-color: #c8d9e4; }
+.timeline-title { font-size: 14px; color: #192f42; }
+.event { border-color: #dbe5ec; font-size: 13px; }
+.event time { color: #405e72; font-variant-numeric: tabular-nums; }
+.event .muted { font-size: 12px; }
+.pill { color: #315a72; background: #f2f8fb; border-color: #b8cfdd; font-size: 11px; }
+.kpi span { color: #486377; font-size: 12px; }
+.message { background: #e0f3e8; border-color: #a4d0b7; color: #15583d; font-size: 13px; }
+.error { background: #fff0e9; border-color: #dcac9a; color: #872e1c; font-size: 13px; }
+.empty { border-color: #a9c2d2; color: #4e6677; font-size: 14px; }
+.badge-outline { color: #36596e; background: #f3f8fb; border-color: #b9d2e0; font-size: 12px; }
+@media (max-width: 1030px) {
+  .sidebar .nav-btn { font-size: 0; }
+  .sidebar .nav-btn::before { font-size: 21px; }
+}
+@media (max-width: 730px) {
+  h1 { font-size: 25px; }
+  h2 { font-size: 19px; }
+  .step { font-size: 12px; }
+  .timeline-header { flex-wrap: wrap; }
+  .timeline-header .btn { min-height: 40px; }
+  .event { gap: 8px; }
+  .event time { width: 70px; flex-basis: 70px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
 </style></head>
 <body><div class="app"><aside class="sidebar"><div class="brand">ONE<span>SHOP</span></div><div class="side-label">Operations</div><button class="nav-btn active" data-icon="▣" data-page="checkin">Service Writer · Intake</button><button class="nav-btn" data-icon="↔" data-page="porter">Porter Queue</button><button class="nav-btn" data-icon="◷" data-page="customer">Customer Timeline</button><div class="side-label">Configuration</div><button class="nav-btn" data-icon="▦" data-page="map">Space Types / Map</button><div class="aside-note"><b>Prototype</b><br>Click through check-in, request a type-based move, claim and confirm it, and inspect the customer's resulting timeline. All data is local to this page.</div></aside><div class="main"><header class="topbar"><div class="crumb">OneShop <b> / <span id="breadcrumb">Service Writer · Intake</span></b></div><span class="pilot">WORKFLOW PROTOTYPE · NOT CONNECTED</span></header><main class="content" id="root"></main></div></div>
 <script>
@@ -25,7 +136,7 @@ if(state.step===0)content=`<h2>What type of unit is being received?</h2><p class
 if(state.step===1)content=`<h2>Identify the customer and unit</h2><p class="subtitle">Minimal information first. Optional fields should not delay check-in. Search and matching rules will be implemented against the real dealership records.</p><div class="grid2"><div><h3>Customer / responsible account</h3>${field('customer.name','Customer / account name',{required:true})}${field('customer.phone','Primary phone',{hint:'Multiple phone contacts and preferences are supported in the production data model.'})}${field('customer.email','Email address',{type:'email',hint:'Optional. Additional emails belong to contact records.'})}</div><div><h3>Unit (RV or vehicle)</h3>${field('unit.kind','Type',{options:[['RV','RV / travel trailer / motorhome'],['Vehicle','Other vehicle']]})}<div class="grid2">${field('unit.year','Year')}${field('unit.make','Make')}</div>${field('unit.model','Model')}${field('unit.vin','VIN / serial identifier',{required:true})}${field('unit.stock','Stock number (optional)')}</div></div>`;
 if(state.step===2)content=`<h2>Associate repair orders and work</h2><p class="subtitle">One unit can have several concurrent repair orders, each with its own service line items. Add as many as needed at intake.</p><div class="grid2">${field('ro','Repair order number',{required:true})}${field('advisor','Responsible service writer',{required:true})}</div>${field('scope','RO 1 · Line item 01',{long:true,required:true,placeholder:'Customer concern or receiving work scope'})}${state.extraLines.map((v,i)=>`<div class="field"><label>RO 1 · Line item ${String(i+2).padStart(2,'0')}</label><input data-extra-line="${i}" value="${esc(v)}" placeholder="Additional work or customer concern"></div>`).join('')}<button class="btn" id="addline" type="button">+ Add line item</button><div class="divider"></div>${state.extraROs.map((r,i)=>`<div class="grid2"><div class="field"><label>RO ${i+2} · Number</label><input data-extra-ro-number="${i}" value="${esc(r.number)}" placeholder="RO number"></div><div class="field"><label>RO ${i+2} · Line item 01</label><input data-extra-ro-scope="${i}" value="${esc(r.scope)}" placeholder="Work scope"></div></div>`).join('')}<button class="btn secondary" id="addro" type="button">+ Add another RO</button><div class="callout"><strong>Hierarchy</strong>${esc(state.customer.name||'Customer')} → ${esc(state.unit.make+' '+state.unit.model)} → ${1+state.extraROs.length} RO(s) → ${1+state.extraLines.length+state.extraROs.length} line item(s). All share this physical unit and visit.</div>`;
 if(state.step===3)content=`<h2>Confirm physical receipt</h2><p class="subtitle">Record where the unit actually is and whether it can safely be moved. The arrival area is not the final parking assignment.</p><div class="grid2">${field('arrival','Receiving / pickup location',{options:types.find(t=>t.id==='dropoff').spaces.map(x=>[x,x])})}${field('keyStatus','Key / packet status',{options:[['Cabinet intake','Keys checked in at service desk'],['With unit','Keys / packet with unit'],['Missing / unresolved','Missing keys or custody unresolved']]})}${field('promised','Customer pickup commitment (if agreed)',{type:'datetime-local',hint:'Optional. Never invent a promise or copy a shop estimate into a customer commitment.'})}${field('notes','Receipt notes / visible condition',{long:true,placeholder:'Existing damage, handling restrictions, photos to be added'})}</div><div class="callout warning"><strong>Next action after finishing</strong>The visit is recorded as checked in. A Move Unit action will be offered. A move request never changes the unit's confirmed physical location until the porter confirms delivery.</div>`;
-root.innerHTML=title('Workflow 01 / Unit arrival','Service Writer Check-In','Receive the customer, identify the unit and its work, confirm physical arrival, and route it to the next operational department.')+msg()+`<div class="card">${stages()}${content}<div class="actions"><button class="btn" id="back" ${state.step===0?'disabled':''}>Back</button><div class="right"><button class="btn secondary" id="next">${state.step===3?'Finish Check-In':'Continue'}</button></div></div></div>`;bind();root.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{state.checkinType=b.dataset.type;render()}));if(state.step===2){root.querySelector('#addline').onclick=()=>{state.extraLines.push('');render()};root.querySelector('#addro').onclick=()=>{state.extraROs.push({number:'',scope:''});render()}}root.querySelector('#back').onclick=()=>{if(state.step>0)state.step--;render()};root.querySelector('#next').onclick=()=>{if(!validateStep())return;if(state.step===3)finish();else {state.step++;render()}}}
+root.innerHTML=title('Workflow 01 / Unit arrival','Service Writer Check-In','Receive the customer, identify the unit and its work, confirm physical arrival, and route it to the next operational department.')+msg()+`<div class="card">${stages()}${content}<div class="actions"><button class="btn" id="back" ${state.step===0?'disabled':''}>Back</button><div class="right"><button class="btn primary" id="next">${state.step===3?'Finish Check-In':'Continue'}</button></div></div></div>`;bind();root.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{state.checkinType=b.dataset.type;render()}));if(state.step===2){root.querySelector('#addline').onclick=()=>{state.extraLines.push('');render()};root.querySelector('#addro').onclick=()=>{state.extraROs.push({number:'',scope:''});render()}}root.querySelector('#back').onclick=()=>{if(state.step>0)state.step--;render()};root.querySelector('#next').onclick=()=>{if(!validateStep())return;if(state.step===3)finish();else {state.step++;render()}}}
 function validateStep(){if(state.step===1&&(!state.customer.name.trim()||!state.unit.vin.trim()&&!state.unit.stock.trim())){state.error='Enter a customer/account and a unit identifier (VIN, serial or stock number).';render();return false}if(state.step===2&&(!state.ro.trim()||!state.scope.trim()||!state.advisor.trim()||state.extraLines.some(x=>!x.trim())||state.extraROs.some(x=>!x.number.trim()||!x.scope.trim())||new Set([state.ro,...state.extraROs.map(x=>x.number.trim())]).size!==1+state.extraROs.length)){state.error='Provide distinct RO numbers, responsible writer and descriptions for every line item.';render();return false}return true}
 function event(type,label,details){state.eventLog.push({id:'e'+(state.eventLog.length+1),type,label,details,at:now(),visit:state.visitId,unit:state.unit.vin})}
 function finish(){if(state.done)return;state.done=true;state.visitId='V-2026-001';state.location=state.arrival;state.move.pickup=state.location;state.move.type=state.urgency==='waiter'?'waiter':state.checkinType==='inventory'?'pdi':'storage';state.move.space='';event('checkin','Service Writer Check-In',`${state.customer.name} · ${[state.ro,...state.extraROs.map(x=>x.number)].join(', ')} · ${state.arrival}`);state.notice='Check-in recorded in the prototype. Recommended next action: Move Unit.';render()}
