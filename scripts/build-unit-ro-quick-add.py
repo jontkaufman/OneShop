@@ -8,9 +8,14 @@ script = '<script src="./unit-ro-quick-add.js"></script>'
 assert source.count(styles) == 1, "Shared stylesheet links missing"
 assert source.count(script) == 1, "Prototype script source missing"
 css = "\n".join((root/path).read_text() for path in (
-    "styles/tokens.css","styles/oneshop.css","styles/unit-ro-quick-add.css"
+    "styles/tokens.css","styles/oneshop.css","styles/unit-ro-quick-add.css","styles/universal-search.css"
 ))
 js = (root/"prototypes/unit-ro-quick-add.js").read_text()
+domain = (root/"src/domain/universal-search.mjs").read_text().replace("export const ", "const ").replace("export function ", "function ")
+controller = (root/"prototypes/universal-search-controller.js").read_text()
+assert js.count("/*__ONE_SEARCH_DOMAIN__*/") == 1
+assert js.count("/*__ONE_SEARCH_CONTROLLER__*/") == 1
+js = js.replace("/*__ONE_SEARCH_DOMAIN__*/", domain).replace("/*__ONE_SEARCH_CONTROLLER__*/", controller)
 built = source.replace(styles,"<style>" + css + "</style>")
 built = built.replace(script,"<script>\n" + js + "</script>")
 out = root/"prototypes/unit-ro-quick-add.html"
