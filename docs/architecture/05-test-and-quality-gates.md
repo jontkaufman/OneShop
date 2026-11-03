@@ -1,4 +1,6 @@
 # OneShop Quality and Verification Contract
+
+**Project-wide design gate:** Every module must follow the [OneShop Product Design Principles](../design/product-design-principles.md). Changes that add settings, permissions, actions or statuses require a documented review of the entire affected component (not merely the new control), with layout, responsive, accessibility and regression checks.
 Status: proposed test strategy. A feature is not 'done' until demonstrable from source, database and UI.
 
 ## Test layers
