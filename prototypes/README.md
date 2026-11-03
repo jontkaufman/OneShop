@@ -1,5 +1,7 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+**Design governance:** [Enterprise Settings & Permissions UX Standard](../docs/design/settings-experience-standard.md) applies to every new/modified setting or permission. Review and polish the entire affected settings block, not just the new control.
+
 ## v0.3 — Shared styling and dealership settings
 
 **Interactive Settings page** (Configuration > Settings):
