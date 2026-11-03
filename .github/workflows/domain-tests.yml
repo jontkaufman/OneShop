@@ -32,5 +32,7 @@ jobs:
         run: |
           python3 scripts/build-prototype.py
           git diff --exit-code -- prototypes/service-writer-intake.html
+          python3 scripts/build-unit-ro-quick-add.py
+          git diff --exit-code -- prototypes/unit-ro-quick-add.html
       - name: Run domain and prototype smoke tests
         run: npm test
