@@ -2,6 +2,7 @@
 Baseline date: 2026-11-02. This is the proposed target architecture, **not** an implemented or production-verified system.
 
 ## Review order
+0. **[OneShop-wide Product Design Principles](../design/product-design-principles.md):** user-confirmed rules governing enterprise polish, compact settings, shared design system, role-specific clarity and full-component review for every new feature.
 1. [Product charter and confirmed requirements](00-product-charter.md): mission, users, boundaries, role responsibilities, workflows, invariants, actual project status.
 2. [Technical architecture](01-technical-architecture.md): tenancy, RLS, domain model, concurrency, map design, integrations and operations.
 3. [Module delivery plan](02-module-delivery-plan.md): Gate 0 and Modules 01-10 with dependency/acceptance criteria.
