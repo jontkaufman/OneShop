@@ -87,3 +87,15 @@ test('secondary none is a valid configuration, with fallback used only when prim
  assert.equal(p.primary.value,'STK-0442');
  assert.equal(p.secondary,null);
 });
+
+test('explicit None blocks secondary fallbacks even if those fields exist',()=>{
+ const p=disp('porter',{profile:{primary:'stock_number',secondary:'none'}});
+ assert.equal(p.primary.value,'STK-0442');
+ assert.equal(p.secondary,null);
+});
+test('explicit None still allows authorized primary fallback when chosen field is empty',()=>{
+ const rec={...record,unit:{...record.unit,stockNumber:''}};
+ const p=disp('porter',{record:rec,profile:{primary:'stock_number',secondary:'none'}});
+ assert.equal(p.primary.field,'vin_last6');
+ assert.equal(p.secondary,null);
+});
