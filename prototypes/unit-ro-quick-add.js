@@ -74,6 +74,8 @@ function openModal(mode,opts={}){
  $('modal-description').textContent=mode==='unit'?'Register the vehicle once. Add an RO now or later.':'Select an existing unit using a unique identifier, then document the work.';
  $('action-modal').hidden=false;document.body.style.overflow='hidden';
  if(mode==='unit'){
+  $('unit-save-ro').disabled=!canCreateRO();$('unit-save-ro').title=canCreateRO()?'Save unit and create a repair order':'This role can register Units but not create ROs';
+  $('unit-ro-permission-note').hidden=canCreateRO();
   $('modal-unit-form').reset();$('m-duplicate-results').replaceChildren();$('m-unit-vin').focus();
  }else{
   $('modal-ro-form').reset();$('ro-line-items').replaceChildren();$('ro-match-results').replaceChildren();
