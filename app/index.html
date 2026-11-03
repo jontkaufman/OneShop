@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OneShop | Core Records</title>
+<meta name="description" content="OneShop staff unit registration and lookup foundation">
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css">
+<link rel="stylesheet" href="./shell.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">ONE<span>SHOP</span></div>
+    <div class="side-label">Foundation</div>
+    <div class="nav-btn active">Units &amp; Registration</div>
+    <div class="side-label">Planned next</div>
+    <div class="nav-btn" aria-disabled="true">Service Writer Check-In</div>
+    <div class="nav-btn" aria-disabled="true">Porter Dispatch</div>
+    <p class="aside-note">Module 01: authenticated records only. Check-in and move commands are not yet enabled.</p>
+  </aside>
+  <div class="main">
+    <header class="topbar"><div class="crumb">OneShop <b> / Core Records</b></div><span class="pilot">FOUNDATION · LIMITED CAPABILITY</span></header>
+    <main class="content">
+      <div class="eyebrow">Module 01 / Records</div>
+      <h1>Unit Registration</h1>
+      <p class="subtitle">Find an existing unit by VIN or stock number before registering a new one. No service visit or RO is created automatically.</p>
+      <div id="system-message" role="status" aria-live="polite"></div>
+      <section id="setup-panel" class="card" hidden><h2>Connection configuration required</h2><p>Set the public Supabase URL and publishable key in <code>app/config.mjs</code>, then serve this repository through a local or preview web server. Never put a service-role key in frontend configuration.</p></section>
+      <section id="sign-in" class="card" hidden>
+        <h2>Employee sign-in</h2>
+        <p class="muted">Sign in with an existing, authorized Supabase Auth account. Memberships must be provisioned by a trusted administrator.</p>
+        <form id="login-form" class="grid2" autocomplete="on">
+          <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" required autocomplete="username"></div>
+          <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password"></div>
+          <div class="actions"><button class="btn primary" type="submit">Sign in</button></div>
+        </form>
+      </section>
+      <section id="work-panel" hidden>
+        <div class="card compact-context"><div class="field context-picker"><label for="membership-select">Active dealership workspace / role</label><select id="membership-select" aria-label="Select authorized branch and role"></select><div id="staff-info" class="context-summary"></div></div><button id="logout" class="btn" type="button">Sign out</button></div>
+        <div class="card"><div class="card-head"><div><h2>Find a unit</h2><p class="muted">Exact VIN or stock number lookup. Search before registering to avoid duplicates.</p></div><span class="pill">Authorized organization records</span></div>
+          <form id="lookup-form" class="lookup-line">
+            <div class="field"><label for="identifier-kind">Identifier</label><select id="identifier-kind"><option value="vin">VIN</option><option value="stock_number">Stock number</option></select></div>
+            <div class="field flex-field"><label for="identifier-value">Search value</label><input id="identifier-value" required placeholder="Enter a complete VIN or stock number" autocomplete="off"></div>
+            <button type="submit" class="btn primary">Find unit</button>
+          </form>
+          <div id="search-results" class="results" aria-live="polite"></div>
+        </div>
+        <div class="card"><div class="card-head"><div><h2>Register new unit</h2><p class="muted">Any authorized branch employee may create a minimal unit record. A Service Writer can complete intake later.</p></div><span class="pill">No visit created</span></div>
+          <form id="new-unit-form">
+            <div class="grid2">
+              <div class="field"><label for="unit-kind">Unit category</label><select id="unit-kind"><option value="rv">RV</option><option value="vehicle">Other vehicle</option></select></div>
+              <div class="field"><label for="vin">VIN / serial (if known)</label><input id="vin" maxlength="100" autocomplete="off"></div>
+              <div class="field"><label for="stock">Stock number (if known)</label><input id="stock" maxlength="100" autocomplete="off"></div>
+              <div class="field"><label for="year">Year</label><input id="year" inputmode="numeric" type="number" min="1880" max="2200"></div>
+              <div class="field"><label for="make">Make</label><input id="make" maxlength="120"></div>
+              <div class="field"><label for="model">Model</label><input id="model" maxlength="120"></div>
+            </div>
+            <p class="hint">At least VIN or stock number is required. Confirm existing matches before creating another record.</p>
+            <div class="actions"><button class="btn primary" type="submit">Register Unit</button></div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script type="module" src="./main.mjs"></script>
+</body></html>
