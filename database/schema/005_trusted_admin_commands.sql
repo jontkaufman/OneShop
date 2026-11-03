@@ -57,7 +57,7 @@ begin
  if p_permissions is null then raise exception 'Permissions array required'; end if;
  if array_length(p_permissions,1)>200 then raise exception 'Too many permissions'; end if;
  if (select count(*) from unnest(p_permissions) p) <>
-    (select count(distinct p) from unnest(p_permissions) p) then
+    (select count(distinct permission_key) from unnest(p_permissions) as candidate(permission_key)) then
   raise exception 'Duplicate permissions';end if;
  for perm in select unnest(p_permissions) loop
   if not exists(select 1 from public.permission_catalog where permission_key=perm)
@@ -103,7 +103,7 @@ begin
  where id=p_role and organization_id=p_org for update;
  if not found or v_role.archived_at is not null then raise exception 'Role not found';end if;
  if v_role.is_system then raise exception 'Protected starter role; clone before customizing';end if;
- if v_role.version<>p_expected_version then raise exception 'Role changed by another administrator';end if;
+ if p_expected_version is null or v_role.version<>p_expected_version then raise exception 'Role changed by another administrator';end if;
  update public.organization_roles set label=p_label,version=version+1,updated_by=p_actor
  where id=p_role and organization_id=p_org returning version into v_version;
  delete from public.role_capabilities where organization_id=p_org and role_id=p_role;
@@ -125,7 +125,7 @@ begin
   where organization_id=p_org and id=p_role for update;
  if not found or v_role.archived_at is not null then raise exception 'Role not active';end if;
  if v_role.is_system then raise exception 'Protected role cannot be archived';end if;
- if v_role.version<>p_expected_version then raise exception 'Role changed by another administrator';end if;
+ if p_expected_version is null or v_role.version<>p_expected_version then raise exception 'Role changed by another administrator';end if;
  if exists(select 1 from public.member_role_assignments where organization_id=p_org and role_id=p_role)
   then raise exception 'Reassign employees before archiving this role';end if;
  update public.organization_roles set archived_at=now(),version=version+1,updated_by=p_actor
@@ -212,7 +212,7 @@ begin
  select enabled,version into v_previous,v_version from public.organization_module_settings
  where organization_id=p_org and module_key=p_module for update;
  if not found then raise exception 'Module configuration missing';end if;
- if v_version<>p_expected_version then raise exception 'Module modified by another administrator';end if;
+ if p_expected_version is null or v_version<>p_expected_version then raise exception 'Module modified by another administrator';end if;
  update public.organization_module_settings set enabled=p_enabled,version=version+1,
  updated_at=now(),changed_by=p_actor where organization_id=p_org and module_key=p_module
  returning version into v_version;
@@ -235,7 +235,7 @@ begin
  else
   select * into v_old from public.job_positions where organization_id=p_org and id=p_position for update;
   if not found or not v_old.active then raise exception 'Position not active';end if;
-  if v_old.version<>p_expected_version then raise exception 'Position modified by another administrator';end if;
+  if p_expected_version is null or v_old.version<>p_expected_version then raise exception 'Position modified by another administrator';end if;
   update public.job_positions set title=p_title,department=nullif(p_department,''),version=version+1,updated_at=now()
    where organization_id=p_org and id=p_position;
   v_position:=p_position;
@@ -253,7 +253,7 @@ begin
  perform private.require_admin_permission(p_actor,p_org,p_branch,'positions.manage');
  select * into v_old from public.job_positions where organization_id=p_org and id=p_position for update;
  if not found or not v_old.active then raise exception 'Position not active';end if;
- if v_old.version<>p_expected_version then raise exception 'Position modified by another administrator';end if;
+ if p_expected_version is null or v_old.version<>p_expected_version then raise exception 'Position modified by another administrator';end if;
  if exists(select 1 from public.employee_position_assignments
   where organization_id=p_org and position_id=p_position and active) then
   raise exception 'Reassign employees before archiving this position';end if;
