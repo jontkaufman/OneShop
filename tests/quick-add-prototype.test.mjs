@@ -14,13 +14,13 @@ test('top Add menu contains Add Unit and Create RO',()=>{
  assert.ok(source.includes('id="top-create-ro"'));
  assert.ok(source.includes('id="unit-save-ro"'));
 });
-test('RO form requires unique unit locator, work scope and supports optional lines',()=>{
- assert.ok(source.includes('value="stock"'));
- assert.ok(source.includes('value="vin"'));
- assert.ok(source.includes('value="id"'));
+test('RO form reuses the global unit finder and supports optional lines',()=>{
+ assert.ok(source.includes('id="ro-open-global-search"'));
+ assert.ok(!source.includes('id="ro-id-kind"'));
+ assert.ok(!source.includes('id="search-kind"'));
  assert.ok(source.includes('id="ro-description"'));
  assert.ok(source.includes('id="add-ro-line"'));
- assert.ok(js.includes('function resolveUnit(kind,value)'));
+ assert.ok(js.includes("function selectROUnit(u)"));
  assert.ok(js.includes("function saveRO()"));
  assert.ok(js.includes('if(!description)'));
 });
