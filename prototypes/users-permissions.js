@@ -217,7 +217,7 @@ function renderRoles(){
   '<div class="two-panel">'+left+right+'</div>';
 }
 function renderPositions(){
- const p=selectedPosition(),assigned=state.users.filter(u=>u.position===p.id&&u.status!=='inactive').length;
+ const p=selectedPosition(),assigned=state.users.filter(u=>u.position===p.id).length;
  const canEdit=allowed('positions.manage');
  const left='<div class="admin-card"><div class="card-top"><h2>Job positions</h2><span class="role-chip">'+state.positions.filter(p=>p.active).length+' active</span></div>'+
  '<div class="role-list">'+state.positions.filter(p=>p.active).map(x=>
@@ -349,7 +349,7 @@ function openDialog(kind,context={}){
  field('Role name','dialog-name',kind==='clone-role'?selectedRole().label+' (Custom)':'')+'</div>'+
  '<p class="field-hint">New role starts with '+(kind==='clone-role'?'the selected template grants':'no permissions')+'. Edit grants in the role editor.</p>';
  if(kind==='rename-role')form=field('Role name','dialog-name',selectedRole().label);
- if(kind==='archive-role')form='<div class="inline-callout">Archive '+html(selectedRole().label)+'? Assigned employees must be moved to another role first. Historical audit records remain.</div>';
+ if(kind==='archive-role')form='<div class="inline-callout">Archive '+html(selectedRole().label)+'? All assigned employees must be moved to another role first. Historical audit records remain.</div>';
  if(kind==='deactivate-user')form='<div class="inline-callout">Deactivate '+html(selectedUser().name)+'? The employee will lose all permissions immediately in the proposed model. This demo does not revoke an actual login session.</div>';
  $('dialog-body').innerHTML=form;
  dialogAction={kind,...context};
@@ -391,7 +391,7 @@ function saveDialog(){
  } else if(kind==='archive-role'){
   if(!allowed('roles.manage'))throw Error('Not authorized');
   const role=selectedRole();
-  const archived=archiveRoleTemplate(role,{assignedUsers:state.users.filter(u=>u.role===role.id&&u.status!=='inactive').length});
+  const archived=archiveRoleTemplate(role,{assignedUsers:state.users.filter(u=>u.role===role.id).length});
   Object.assign(role,archived);state.selectedRoleId='service_writer';audit('Archived role '+role.label);
  } else if(kind==='deactivate-user'){
   const u=selectedUser();
