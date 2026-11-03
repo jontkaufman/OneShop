@@ -3,7 +3,7 @@
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 source = (root/"prototypes/unit-ro-quick-add.source.html").read_text()
-styles = '<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/unit-ro-quick-add.css">'
+styles = '<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/unit-ro-quick-add.css"><link rel="stylesheet" href="../styles/universal-search.css">'
 script = '<script src="./unit-ro-quick-add.js"></script>'
 assert source.count(styles) == 1, "Shared stylesheet links missing"
 assert source.count(script) == 1, "Prototype script source missing"
