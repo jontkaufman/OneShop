@@ -5,12 +5,18 @@ on:
       - "src/domain/**"
       - "tests/**"
       - "package.json"
+      - "prototypes/**"
+      - "styles/**"
+      - "scripts/**"
       - ".github/workflows/domain-tests.yml"
   pull_request:
     paths:
       - "src/domain/**"
       - "tests/**"
       - "package.json"
+      - "prototypes/**"
+      - "styles/**"
+      - "scripts/**"
       - ".github/workflows/domain-tests.yml"
 jobs:
   handoff:
@@ -22,5 +28,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Run domain tests
+      - name: Verify standalone prototype is reproducible
+        run: |
+          python3 scripts/build-prototype.py
+          git diff --exit-code -- prototypes/service-writer-intake.html
+      - name: Run domain and prototype smoke tests
         run: npm test
