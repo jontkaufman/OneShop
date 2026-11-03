@@ -35,7 +35,7 @@
         </form>
       </section>
       <section id="work-panel" hidden>
-        <div class="card compact-context"><div><label>Signed-in dealership context</label><div id="staff-info" class="context-summary"></div></div><button id="logout" class="btn" type="button">Sign out</button></div>
+        <div class="card compact-context"><div class="field context-picker"><label for="membership-select">Active dealership workspace / role</label><select id="membership-select" aria-label="Select authorized branch and role"></select><div id="staff-info" class="context-summary"></div></div><button id="logout" class="btn" type="button">Sign out</button></div>
         <div class="card"><div class="card-head"><div><h2>Find a unit</h2><p class="muted">Exact VIN or stock number lookup. Search before registering to avoid duplicates.</p></div><span class="pill">Authorized organization records</span></div>
           <form id="lookup-form" class="lookup-line">
             <div class="field"><label for="identifier-kind">Identifier</label><select id="identifier-kind"><option value="vin">VIN</option><option value="stock_number">Stock number</option></select></div>
