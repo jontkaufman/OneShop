@@ -1,0 +1,24 @@
+/* OneShop shared theme tokens — source of truth for ALL application screens.
+   Palette changes require editing only these values, not individual page CSS.
+   Future React app imports tokens.css and oneshop.css once in the app shell. */
+:root,[data-theme="classic"]{
+ --os-canvas:#eff3f7;--os-surface:#ffffff;--os-surface-muted:#f5f8fa;
+ --os-ink:#162b3e;--os-muted:#4d6072;--os-line:#c8d5df;--os-input-line:#98afc0;
+ --os-sidebar:#142b40;--os-sidebar-text:#e5eef5;--os-sidebar-highlight:#a4ddfa;--os-nav-active:#31536c;
+ --os-accent:#0c5f91;--os-accent-dark:#0c4b72;--os-accent-hover:#094b75;--os-accent-soft:#e6f2fa;
+ --os-accent-line:#9ac1d8;--os-focus:#0b72ab;--os-focus-wash:rgba(13,100,153,.15);
+}
+[data-theme="slate"]{
+ --os-canvas:#eef1f4;--os-surface:#ffffff;--os-surface-muted:#f6f8fa;
+ --os-ink:#1e293b;--os-muted:#475569;--os-line:#c7d1db;--os-input-line:#94a3b8;
+ --os-sidebar:#182333;--os-sidebar-text:#e2e8f0;--os-sidebar-highlight:#cbd5e1;--os-nav-active:#334155;
+ --os-accent:#475569;--os-accent-dark:#334155;--os-accent-hover:#334155;--os-accent-soft:#edf2f7;
+ --os-accent-line:#b8c4d2;--os-focus:#334155;--os-focus-wash:rgba(71,85,105,.17);
+}
+[data-theme="forest"]{
+ --os-canvas:#f1f5f2;--os-surface:#ffffff;--os-surface-muted:#f4f8f5;
+ --os-ink:#17332c;--os-muted:#4a6259;--os-line:#c2d6cc;--os-input-line:#8faf9e;
+ --os-sidebar:#17362d;--os-sidebar-text:#e7f4ec;--os-sidebar-highlight:#b5e5cb;--os-nav-active:#2e5846;
+ --os-accent:#216b53;--os-accent-dark:#1a5743;--os-accent-hover:#18523f;--os-accent-soft:#e0f3e8;
+ --os-accent-line:#98cbb1;--os-focus:#216b53;--os-focus-wash:rgba(33,107,83,.17);
+}
