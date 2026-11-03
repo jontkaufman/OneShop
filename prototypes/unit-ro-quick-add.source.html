@@ -1,0 +1,106 @@
+<!doctype html><html lang="en" data-theme="classic"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>OneShop | Module 01 Review</title>
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/unit-ro-quick-add.css"></head>
+<body><div class="shell"><aside class="sidebar">
+  <div class="brand">ONE<span>SHOP</span></div>
+  <div class="side-label">Operations</div>
+  <button class="nav-btn active" data-icon="▣" type="button">Units &amp; Registration</button>
+  <div class="side-label">Upcoming modules</div>
+  <button class="nav-btn" aria-disabled="true" disabled type="button">Service Writer Check-In</button>
+  <button class="nav-btn" aria-disabled="true" disabled type="button">Porter Dispatch</button>
+  <button class="nav-btn" aria-disabled="true" disabled type="button">Movement Notifications</button>
+  <div class="side-label">Review information</div>
+  <p class="aside-note"><b>Module 01 · Offline UI review</b><br>Actual Supabase tables and policies exist. This file contains fictional example records and makes no database requests.</p>
+</aside><div class="main"><header class="topbar">
+<div class="crumb">OneShop <b>/ Core Records / Units</b></div>
+<div class="topbar-actions"><span class="pilot">OFFLINE DEMO · NOT CONNECTED</span>
+<button type="button" class="top-add" id="add-button" aria-haspopup="menu" aria-expanded="false">+ Add <span aria-hidden="true">⌄</span></button>
+<div class="add-popover" id="add-menu" role="menu" hidden>
+<button class="add-option" type="button" role="menuitem" id="top-add-unit"><b>Add Unit</b><small>Save unit or save and start a repair order</small></button>
+<button class="add-option" type="button" role="menuitem" id="top-create-ro"><b>Create RO</b><small>Find a unit by its unique identifier</small></button>
+</div></div></header><main class="content">
+<div class="head-controls"><div><div class="eyebrow">Module 01 / Core Records</div>
+<h1>Units &amp; Repair Orders</h1>
+<p class="subtitle">Find existing units, register new vehicles and link repair orders without duplicating records. Use <b>Add</b> in the top bar to begin.</p></div>
+<div class="review-label">UI REVIEW · SAMPLE DATA</div></div>
+<div class="demo-banner"><b>Test page:</b> All records below are fictional. Changes exist only in this open page and are lost on refresh. The real Supabase schema has been created, but this review page does not sign in or save to it.</div>
+<div class="card"><div class="card-head"><div><h2>Current workspace</h2><p class="muted">Choose a role to preview the identifier order used for that team.</p></div><span class="pill">Demonstration identities</span></div>
+<div class="context-panel"><div class="field"><label for="branch">Dealership branch</label><select id="branch">
+<option value="Napa Service Center">Napa Service Center</option><option value="North Bay RV">North Bay RV</option></select></div>
+<div class="field"><label for="role">Working as</label><select id="role">
+<option value="service_writer">Service Writer · Customer / RO</option>
+<option value="porter">Porter / Lot · Stock / VIN</option><option value="technician">Technician · RO / VIN</option>
+<option value="sales">Sales · Stock / Model</option><option value="foreman">Foreman · RO / VIN</option>
+<option value="pdi">PDI / Inventory · Stock / VIN</option>
+</select></div></div></div>
+<div class="top-summary">
+<div class="card"><small>Units registered</small><b id="units-count">4</b></div>
+<div class="card"><small>On site (demo)</small><b id="onsite-count">3</b></div>
+<div class="card"><small>Active ROs (demo)</small><b id="ro-count">3</b></div>
+</div>
+<div class="work-area">
+<div>
+<section class="card"><div class="activity-heading"><div><h2>Find a unit</h2><p class="muted">Exact VIN or stock number. Confirm matching records before adding another.</p></div><span class="pill">Shared Unit record</span></div>
+<form id="lookup-form" class="split-search"><div class="field"><label for="search-kind">Search by</label>
+<select id="search-kind"><option value="vin">VIN</option><option value="stock">Stock number</option></select></div>
+<div class="field"><label for="search-value">Identifier</label><input id="search-value" autocomplete="off" placeholder="Enter a VIN or stock number" value=""></div>
+<button type="submit" class="btn primary">Find unit</button></form>
+<div id="lookup-feedback" role="status" class="inline-result" aria-live="polite"></div>
+<div class="aux-actions"><strong style="font-size:13px">Recent units</strong><button id="clear-search" type="button" class="btn secondary">Show all</button></div>
+<div class="units-list" id="units-list"></div></section>
+<section class="card"><div class="card-head"><div><h2>Recent repair orders</h2><p class="muted">ROs reference existing units. Multiple ROs may belong to one vehicle.</p></div><span class="pill">Operational records</span></div>
+<div id="recent-ros" aria-live="polite"></div></section>
+</div>
+<div>
+<section class="card" id="unit-detail"><div class="card-head"><div><h2>Unit context</h2><p class="muted">One record, linked to the appropriate operating information.</p></div></div>
+<div class="record-view" id="detail-content"></div>
+<div class="status-strip">Physical visits, RO relationships and event history are real database model concepts. This review shows only sample read-only context; transactional check-in is not yet built.</div>
+</section>
+<section class="card"><h3>Next operational handoff</h3><p class="muted">A Service Writer will complete intake, associate active ROs and request a move. The porter will then receive an actionable notification with the relevant unit identifiers.</p>
+<div class="callout warning"><strong>Not enabled in Module 01</strong>Check-in completion, porter claims, confirmed movements and alerts require the next transactional module. No actions here update a physical location.</div></section>
+</div></div>
+</main></div></div>
+<div class="modal-backdrop" id="action-modal" hidden>
+<section class="record-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+ <div class="modal-head"><div><div class="eyebrow" id="modal-kicker">Core Records / Add</div><h2 id="modal-title">Add Unit</h2><p class="muted" id="modal-description">Record one unit and reuse it across service visits and ROs.</p></div><button id="modal-close" type="button" class="icon-close" aria-label="Close dialog">×</button></div>
+ <div class="modal-body">
+ <div id="modal-error" class="modal-error" role="alert"></div>
+ <form id="modal-unit-form" novalidate>
+ <div class="modal-section"><h3>Unit identification</h3>
+ <div class="grid2">
+ <div class="field"><label for="m-unit-type">Unit type</label><select id="m-unit-type"><option value="RV">RV / Motorhome / Trailer</option><option value="Vehicle">Other vehicle</option></select></div>
+ <div class="field"><label for="m-unit-year">Year</label><input id="m-unit-year" type="number" min="1880" max="2200" placeholder="2025"></div>
+ <div class="field"><label for="m-unit-make">Make</label><input id="m-unit-make" maxlength="120" placeholder="Airstream"></div>
+ <div class="field"><label for="m-unit-model">Model</label><input id="m-unit-model" maxlength="120" placeholder="Flying Cloud"></div>
+ <div class="field"><label for="m-unit-vin">VIN / serial</label><input id="m-unit-vin" maxlength="100" placeholder="If known"></div>
+ <div class="field"><label for="m-unit-stock">Stock number</label><input id="m-unit-stock" maxlength="100" placeholder="If known"></div>
+ </div><p class="hint">At least one unique unit identifier is required: VIN or stock number. Year, make and model alone do not identify a specific unit.</p></div>
+ <div id="m-duplicate-results" class="match-area"></div>
+ </form>
+ <form id="modal-ro-form" hidden novalidate>
+ <div class="modal-section"><h3>Find the unit</h3>
+ <div class="inline-id-search"><div class="field"><label for="ro-id-kind">Identify by</label><select id="ro-id-kind"><option value="stock">Stock number</option><option value="vin">VIN / Serial</option><option value="id">OneShop unit reference</option></select></div>
+ <div class="field"><label for="ro-id-value">Exact identifier</label><input id="ro-id-value" placeholder="Enter stock, VIN or unit ID" autocomplete="off"></div>
+ <button type="button" class="btn secondary" id="ro-find-unit">Find unit</button></div>
+ <p class="short-info">Search uses a unique vehicle identifier. Make/model are not accepted as a match.</p>
+ <div id="ro-match-results" class="match-area"></div>
+ <div id="ro-connected-unit" class="connected-unit" hidden></div>
+ </div>
+ <div class="modal-section"><h3>Repair order details</h3>
+ <div class="grid2"><div class="field"><label for="ro-number">RO number <span class="optional-mark">Editable</span></label><input id="ro-number" required maxlength="60" autocomplete="off"></div>
+ <div class="field"><label for="ro-source">Numbering method</label><div class="hint">Next available demo RO number is prefilled. Replace it with a custom RO number if needed.</div><button type="button" class="btn secondary" id="ro-reset-number">Use next auto number</button></div></div>
+ <div class="field"><label for="ro-description">Work description <span class="required-mark">*</span></label><textarea id="ro-description" rows="3" maxlength="2000" placeholder="Briefly describe the reason for this RO or scope of work"></textarea>
+ <p class="hint">A brief description is required. Individual work line items are optional and can be added later.</p></div>
+ </div>
+ <div class="modal-section"><div class="line-head"><h3>Line items <span class="optional-mark">Optional</span></h3><button type="button" class="btn secondary" id="add-ro-line">+ Add line</button></div>
+ <div id="ro-line-items" class="optional-lines"></div></div>
+ </form>
+ </div>
+ <footer class="modal-footer"><button type="button" class="btn" id="modal-cancel">Cancel</button>
+ <button type="button" class="btn primary" id="unit-save">Save Unit</button>
+ <button type="button" class="btn secondary" id="unit-save-ro">Save &amp; Create RO</button>
+ <button type="button" class="btn primary" id="ro-save" hidden>Save RO</button></footer>
+</section></div>
+<script src="./unit-ro-quick-add.js"></script>
+</body></html>
