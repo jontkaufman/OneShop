@@ -1,5 +1,20 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## v0.3 — Shared styling and dealership settings
+
+**Interactive Settings page** (Configuration > Settings):
+- Check-In Fields: independent Customer Service and New Inventory profiles, with Required / Optional / Hidden per field.
+- Customer name may be optional; VIN and stock number can be independently required or optional. At least one usable unit identifier is always required; both identifier fields cannot be hidden.
+- RO number may be optional for a draft RO; profile-specific line-item and writer requirements are also configurable.
+- Appearance: Classic Blue (approved), Graphite and Forest themes apply to the entire prototype.
+- Demo-directory search can reuse existing customer/unit/RO values instead of duplicating them.
+- Settings are stored only in this browser's localStorage; **not yet in Supabase**.
+
+**Shared CSS architecture**: edit `styles/tokens.css` for global palettes and `styles/oneshop.css` for reusable UI components. The tracked `prototypes/service-writer-intake.source.html` imports both once. Build the standalone demonstration file using `python scripts/build-prototype.py`. Do **not** individually edit page colors or hand-edit the generated `prototypes/service-writer-intake.html`.
+
+Detailed field-policy and production configuration contract: [WF-04 Dealership Settings](../docs/workflows/04-dealership-settings.md).
+
+
 **Status:** interaction model, not an integrated production module. All values are fictional and held in browser memory. No Supabase authentication, SQL persistence, deployment or location-capacity service is connected.
 
 ## Test the journey
