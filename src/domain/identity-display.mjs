@@ -74,6 +74,9 @@ export function displayIdentifiers({ role, profile, record, allowedFields, fallb
   if (!valid.ok) throw new Error(valid.error);
   if (!Array.isArray(allowedFields) && !(allowedFields instanceof Set))
     throw new Error('Provide authorized identifier fields');
+  // "None" means intentionally show no second identifier; fallback must not
+  // silently re-enable it. Otherwise fall back only if a requested value is absent.
+  const maximumItems = selected.secondary === 'none' ? 1 : 2;
   const fields = [selected.primary, selected.secondary, ...fallbackFields].filter(f=>f && f!=='none');
   const seen = new Set();
   const items = [];
@@ -82,7 +85,7 @@ export function displayIdentifiers({ role, profile, record, allowedFields, fallb
     seen.add(field);
     const value = identifierValue(field, record);
     if (value) items.push({ field, label: IDENTIFIER_FIELDS[field], value });
-    if (items.length === 2) break;
+    if (items.length === maximumItems) break;
   }
   return { primary:items[0] ?? null, secondary:items[1] ?? null, needsDisambiguation:!items.length };
 }
