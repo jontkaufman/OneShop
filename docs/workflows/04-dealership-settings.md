@@ -2,6 +2,8 @@
 
 **Status:** implemented in the **offline v0.3 prototype**, not yet connected to Supabase. This is the backend contract for the production module, not an applied migration.
 
+**Enterprise settings UX directive:** All new or changed settings and permissions must comply with the [OneShop Settings & Permissions UX Standard](../design/settings-experience-standard.md). Adding an option triggers a review of the whole affected settings section for grouping, density, clarity, responsive behavior and permissions. Do not append controls without re-evaluating their surrounding component.
+
 ## Design goals
 
 1. Shop administrators configure required, optional or hidden fields **per intake workflow**, not through separate hard-coded page forms.
