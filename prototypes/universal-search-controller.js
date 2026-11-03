@@ -75,7 +75,7 @@ function renderGlobalSearch(){
      const index=displayIndex++;
      const button=mk('button','global-search-hit');button.type='button';
      button.dataset.searchIndex=String(index);
-     button.setAttribute('role','listitem');
+     /* Preserve native button semantics for keyboard and assistive tech. */
      const letter=kind==='ro'?'RO':kind==='customer'?'C':'U';
      button.append(mk('span','global-search-kind',letter));
      const copy=mk('span','global-search-main');
