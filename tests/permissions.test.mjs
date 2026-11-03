@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {MODULES,PERMISSIONS,ROLE_TEMPLATES,effectivePermissions,defaultModuleSettings,hasPermission,createRoleTemplate,updateRoleTemplate,archiveRoleTemplate,mayAssignPermission,visibleModules} from '../src/domain/permissions.mjs';
+import {MODULES,PERMISSIONS,ROLE_TEMPLATES,effectivePermissions,defaultModuleSettings,hasPermission,createRoleTemplate,updateRoleTemplate,archiveRoleTemplate,mayAssignPermission,visibleModules,searchFieldGrants} from '../src/domain/permissions.mjs';
 const roles = (key)=>[{id:key,...ROLE_TEMPLATES[key]}];
 test('new dealership has core enabled, advanced disabled',()=>{
  const state=defaultModuleSettings();
@@ -76,4 +76,20 @@ test('visible module list omits advanced by default',()=>{
 });
 test('registered permission registry has stable module references',()=>{
  for(const p of Object.values(PERMISSIONS))assert.ok(p.module===null || Object.hasOwn(MODULES,p.module));
+});
+
+test('universal search derives from the same permission template and overrides',()=>{
+ const porter=effectivePermissions({roles:roles('porter')});
+ const fields=searchFieldGrants(porter);
+ assert.equal(fields.unitRead,true);
+ assert.equal(fields.vinRead,true);
+ assert.equal(fields.stockRead,true);
+ assert.equal(fields.roRead,false);
+ assert.equal(fields.customerRead,false);
+ const writer=effectivePermissions({roles:roles('service_writer'),overrides:{'unit.vin.read':'deny','ro.work.read':'deny'}});
+ const writerFields=searchFieldGrants(writer);
+ assert.equal(writerFields.customerRead,true);
+ assert.equal(writerFields.roRead,true);
+ assert.equal(writerFields.vinRead,false);
+ assert.equal(writerFields.workRead,false);
 });
