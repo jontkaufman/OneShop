@@ -11,6 +11,9 @@ css = "\n".join((root/path).read_text() for path in (
     "styles/tokens.css","styles/oneshop.css","styles/unit-ro-quick-add.css","styles/universal-search.css"
 ))
 js = (root/"prototypes/unit-ro-quick-add.js").read_text()
+permission_domain = (root/"src/domain/permissions.mjs").read_text().replace("export const ", "const ").replace("export function ", "function ")
+assert js.count("/*__ONE_PERMISSION_DOMAIN__*/") == 1
+js = js.replace("/*__ONE_PERMISSION_DOMAIN__*/", permission_domain)
 domain = (root/"src/domain/universal-search.mjs").read_text().replace("export const ", "const ").replace("export function ", "function ")
 controller = (root/"prototypes/universal-search-controller.js").read_text()
 assert js.count("/*__ONE_SEARCH_DOMAIN__*/") == 1
