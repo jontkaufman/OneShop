@@ -458,7 +458,7 @@ function renderDetail(){const el=$('detail-content');el.replaceChildren();const 
  const data=[['Role identification',identity(u)],['Unit reference',u.id],['VIN',u.vin||'Not recorded'],['Stock number',u.stock||'Not recorded'],['Current owner / account',u.customer||'Unassigned'],['Owner contact',[(u.phone||''),(u.email||'')].filter(Boolean).join(' · ')||'Not recorded'],['Associated ROs',ros.filter(r=>r.unitId===u.id).map(r=>r.number).join(', ')||'Not yet opened'],['Last known position',u.location||'Unknown'],['Visit status',u.visit]];
  for(const [label,value] of data){const row=mk('div','kv');row.append(mk('span','',label),mk('strong','',value));el.append(row);}}
 function notice(id,txt,isError){const n=$(id);n.textContent=txt;n.dataset.type=isError?'error':'ok';}
-$('role').addEventListener('change',render);
+$('role').addEventListener('change',()=>{syncAddPermissions();render();});
 $('lookup-form').addEventListener('submit',e=>{e.preventDefault();const value=$('search-value').value.trim();if(!value){notice('lookup-feedback','Enter a VIN or stock number.',true);return;}
  search={kind:$('search-kind').value,value};const found=units.filter(u=>String(u[search.kind]||'').toLowerCase()===value.toLowerCase());if(found.length)selected=found[0].id;
  notice('lookup-feedback',found.length?found.length+' matching unit(s) found. Select the existing record.':'No matching unit found in these sample records.',!found.length);render();});
@@ -483,12 +483,18 @@ function nextRO(){const nums=ros.map(r=>/^(?:RO-)(\d+)$/i.exec(r.number)).filter
  return 'RO-'+n;
 }
 function modalError(text){$('modal-error').textContent=text||'';}
+function canCreateRO(){return ['service_writer','foreman'].includes($('role').value);}
+function syncAddPermissions(){const allowed=canCreateRO(),button=$('top-create-ro');button.disabled=!allowed;button.title=allowed?'Create a repair order':'RO creation requires an authorized role (demo policy).';}
 function toggleAddMenu(force){const menu=$('add-menu');const open=force??menu.hidden;menu.hidden=!open;$('add-button').setAttribute('aria-expanded',String(open));}
 $('add-button').onclick=()=>toggleAddMenu();
 $('top-add-unit').onclick=()=>openModal('unit');
 $('top-create-ro').onclick=()=>openModal('ro');
 function openModal(mode,opts={}){
- toggleAddMenu(false);lastFocus=document.activeElement;modalMode=mode;modalError('');roSearchResults=[];
+ toggleAddMenu(false);
+ if(mode==='ro'&&!canCreateRO()){
+  notice('lookup-feedback','This role cannot create ROs in the demo. Switch to Service Writer or Foreman.',true);return;
+ }
+ lastFocus=document.activeElement;modalMode=mode;modalError('');roSearchResults=[];
  $('modal-unit-form').hidden=mode!=='unit';$('modal-ro-form').hidden=mode!=='ro';
  for(const id of ['unit-save','unit-save-ro'])$(id).hidden=mode!=='unit';$('ro-save').hidden=mode!=='ro';
  $('modal-title').textContent=mode==='unit'?'Add Unit':'Create Repair Order';
@@ -605,6 +611,7 @@ $('ro-save').onclick=saveRO;
 $('modal-ro-form').onsubmit=e=>{e.preventDefault();saveRO()};
 $('modal-unit-form').onsubmit=e=>{e.preventDefault();saveUnit(false)};
 
+syncAddPermissions();
 render();
 })();
 </script>
