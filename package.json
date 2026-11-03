@@ -1,0 +1,11 @@
+{
+  "name": "oneshop-domain-foundation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "OneShop initial domain contract and prototype. Not the production application.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:handoff": "node --test tests/handoff.test.mjs"
+  }
+}
