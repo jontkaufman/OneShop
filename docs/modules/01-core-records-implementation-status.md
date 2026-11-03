@@ -1,6 +1,6 @@
 # Module 01 — Core Records: Applied Foundation
 
-**Status (November 3, 2026): database applied and inspected, client data adapter committed, no deployed application UI or organization/user bootstrapping.**
+**Status (November 3, 2026): database applied and inspected, client data adapter and minimal authenticated application shell committed. The application is not yet configured/deployed or bootstrapped with users.**
 
 ## Current real state
 
@@ -46,6 +46,8 @@ Customer name/contact fields are separate; Unit is a durable organization-scoped
 - `src/data/records-api.mjs` is a native fetch adapter for Supabase REST with **authenticated user token**, publishable key, explicit organization/branch filters, and strict allowed input fields.
 - `tests/records-api.test.mjs` verifies branch/organization request scoping, VIN and stock-only lookup, minimal registration, missing identifiers, absent authentication and error handling.
 - The adapter deliberately does not expose client methods for membership creation, visit completion, physical move delivery or other unaudited state transitions.
+- `app/index.html`, `app/main.mjs`, `app/config.mjs` and `app/shell.css` provide a minimal authenticated records UI with signed-in membership selection, exact VIN/stock lookup and unit registration. All external credentials are blank placeholders. The UI is **not yet deployed, authenticated against a real user, or verified in a browser with live data**. See [App runbook](../../app/README.md).
+- `tests/app-shell.test.mjs` statically verifies safe configuration references, shared styling and ES module parsing.
 - `src/domain/identity-display.mjs` and `src/domain/handoff.mjs` from earlier draft branches remain reusable pure contract code.
 
 ## Deployment and next slice
