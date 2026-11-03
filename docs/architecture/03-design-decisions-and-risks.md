@@ -15,13 +15,17 @@ Date: 2026-11-02 | Status: decision proposals, not approvals or implementations.
 - Invoice only bills completed authorized work; future accepted invoice recommendation routes to next compatible draft work order, deduplicated.
 - Intertrak inspections remain separate; no assumed shared auth/database; live CDK integration not established.
 
+## Approved record hierarchy (2026-11-02)
+
+Customer -> Unit (RV/vehicle) -> Repair Order -> RO Line Item is confirmed. One-to-many at each browsing level; unit identity persists over ownership change, historical ROs retain their service-time customer, onsite visits group one unit's physical presence and multiple ROs without adding a displayed hierarchy level. RO line item is the stable core service/work scope; parts, labor and department tasks are subordinate/linked records.
+
 ## Critical unresolved design choices
 | ID | Decision / tension | Recommendation | Blocks |
 | --- | --- | --- | --- |
 | ADR-001 | OneShop source code: recover hosted prototype vs rebuild? | Audit source/export availability; if inaccessible, rebuild against documented behavior with explicit parity inventory | Gate 0 |
 | ADR-002 | Org/branch/site hierarchy; dealer groups and staff across branches | organization security boundary, branches contain physical properties; role grants scoped to branch | Module 01 |
 | ADR-003 | What is authoritative for master RO/customer/unit fields once CDK arrives? | external source ownership matrix with local override policy; until verified, OneShop-owned demo/native records | Integration |
-| ADR-004 | Service job vs task/work item cardinality | Stable service_job for billable/repair scope, separately assignable department tasks/jobs; avoid equating RO to one technician task | Module 01/04/09 |
+| ADR-004 | Line item versus department task semantics | **Business hierarchy confirmed:** one RO has many stable RO line items (primary service scope). **Implementation recommendation:** separate department-task assignments and parts/labor components reference line-item IDs; do not duplicate service jobs | Module 01/04/09 |
 | ADR-005 | One physical unit, two open ROs, different advisors: who controls visit release? | explicit visit coordinating advisor, escalation to manager when conflicting commitments | Module 01/07 |
 | ADR-006 | Unit inside one shared parking area: capacity and position precision | named shared area with occupancy list/count; optional freeform subposition/notes, never fake unique numbered slot | Module 02/03 |
 | ADR-007 | Map editing and published/live map ownership | draft immutable snapshots and publication, stable location identity, optimistic version checks | Module 02 |
