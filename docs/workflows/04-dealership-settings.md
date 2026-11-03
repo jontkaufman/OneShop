@@ -4,6 +4,8 @@
 
 **Enterprise settings UX directive:** All new or changed settings and permissions must comply with the [OneShop Settings & Permissions UX Standard](../design/settings-experience-standard.md). Adding an option triggers a review of the whole affected settings section for grouping, density, clarity, responsive behavior and permissions. Do not append controls without re-evaluating their surrounding component.
 
+**Role-specific unit identification:** See [WF-06 Role-Based Unit Identification](06-role-based-unit-identifiers.md). It extends the compact Settings information architecture without changing check-in required-field policies. Role identifier order is a **display preference**, not a data-access permission or a different Unit/RO identity.
+
 ## Design goals
 
 1. Shop administrators configure required, optional or hidden fields **per intake workflow**, not through separate hard-coded page forms.
