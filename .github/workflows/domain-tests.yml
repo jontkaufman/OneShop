@@ -34,5 +34,7 @@ jobs:
           git diff --exit-code -- prototypes/service-writer-intake.html
           python3 scripts/build-unit-ro-quick-add.py
           git diff --exit-code -- prototypes/unit-ro-quick-add.html
+          python3 scripts/build-users-permissions.py
+          git diff --exit-code -- prototypes/users-permissions.html
       - name: Run domain and prototype smoke tests
         run: npm test
