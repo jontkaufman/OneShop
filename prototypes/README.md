@@ -1,5 +1,13 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## Module 01 — Universal Search (v0.6)
+
+The standalone [Unit / RO prototype](unit-ro-quick-add.html) now has one global top-navigation search. Type customer, phone/email, VIN (including suffix), stock, RO, unit model, location or work description. Results are grouped by **Customers / Units / Repair Orders**, ranked for exact identifiers first, and navigable with arrows, Enter, Escape or Ctrl/⌘+K. No "search by" selector exists in the Units page or Create RO modal.
+
+**Create RO** invokes the same global search in unit-selection mode; clicking a matching unit links its ID to the RO and brings forward the authorized owner context. The Porter demonstration cannot search customer or RO details, while a Service Writer can. Its local role switch is a simulation, not real security—fictional data remains in the downloaded HTML.
+
+The domain ranking/permission-filter logic is in `src/domain/universal-search.mjs`; controller in `prototypes/universal-search-controller.js`; centralized presentation in `styles/universal-search.css`. Rebuild with `python3 scripts/build-unit-ro-quick-add.py`. Live global search must run through a tenant-authorized server endpoint; none is deployed by this PR. See [WF-08](../docs/workflows/08-global-universal-search.md).
+
 ## Module 01 Quick Add / Create RO review
 
 Open [unit-ro-quick-add.html](unit-ro-quick-add.html) as a standalone, fictional-data review. The global **+ Add** topbar menu offers **Add Unit** (Save / Save & Create RO) and **Create RO** (exact stock, VIN or OneShop Unit ID lookup; current owner/contact summary; editable suggested RO number; brief description; optional lines). Existing Unit identity is reused; duplicate VIN, stock and RO number entries are blocked in the local demonstration.
