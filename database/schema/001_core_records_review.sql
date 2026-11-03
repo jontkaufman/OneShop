@@ -301,17 +301,19 @@ create policy branch_read on public.branches
   for select to authenticated using (private.has_branch_access(organization_id,id));
 
 create policy customers_read on public.customers
-  for select to authenticated using (private.has_org_access(organization_id));
+  for select to authenticated using (private.has_org_role(organization_id,
+    array['service_writer','manager','org_admin','sales','warranty','service_dispatch']::text[]));
 create policy customers_insert on public.customers
   for insert to authenticated with check (
-    private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]));
+    private.has_org_role(organization_id,array['service_writer','manager','org_admin','sales']::text[]));
 create policy customers_update on public.customers
   for update to authenticated
   using (private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]))
   with check (private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]));
 
 create policy contact_read on public.customer_contacts
-  for select to authenticated using (private.has_org_access(organization_id));
+  for select to authenticated using (private.has_org_role(organization_id,
+    array['service_writer','manager','org_admin','sales']::text[]));
 create policy contact_insert on public.customer_contacts
   for insert to authenticated with check (
     private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]));
@@ -331,7 +333,8 @@ create policy units_update on public.units
   with check (private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]));
 
 create policy unit_customer_read on public.unit_customer_relationships
-  for select to authenticated using (private.has_org_access(organization_id));
+  for select to authenticated using (private.has_org_role(organization_id,
+    array['service_writer','manager','org_admin','sales','warranty']::text[]));
 create policy unit_customer_insert on public.unit_customer_relationships
   for insert to authenticated with check (
     private.has_org_role(organization_id,array['service_writer','manager','org_admin']::text[]));
@@ -361,7 +364,9 @@ create policy ro_update on public.repair_orders
   with check (private.has_branch_role(organization_id,branch_id,array['service_writer','manager','org_admin']::text[]));
 
 create policy ro_line_read on public.ro_line_items
-  for select to authenticated using (private.has_branch_access(organization_id,branch_id));
+  for select to authenticated using (private.has_branch_role(organization_id,branch_id,
+    array['service_writer','manager','org_admin','foreman','service_dispatch','technician',
+          'parts','warranty','pdi']::text[]));
 create policy ro_line_insert on public.ro_line_items
   for insert to authenticated with check (
     private.has_branch_role(organization_id,branch_id,array['service_writer','manager','org_admin']::text[]));
@@ -373,7 +378,8 @@ create policy ro_line_update on public.ro_line_items
 -- Audit/timeline writes must later be done by trusted transactional commands,
 -- not client-generated "completion" or "delivery" events.
 create policy activity_events_read on public.activity_events
-  for select to authenticated using (private.has_branch_access(organization_id,branch_id));
+  for select to authenticated using (private.has_branch_role(organization_id,branch_id,
+    array['service_writer','manager','org_admin','foreman','service_dispatch']::text[]));
 
 create policy identifier_profile_read on public.role_identifier_profiles
   for select to authenticated using (
@@ -394,7 +400,8 @@ create policy identifier_profile_update on public.role_identifier_profiles
 
 -- Supabase SQL-created tables are only exposed to the logged-in employee role.
 -- No anon grants, no delete grants, and no client membership/event creation.
-revoke all on all tables in schema public from anon;
+-- Avoid modifying unrelated public objects when this SQL is applied to a mature project.
+-- Only OneShop's own tables are explicitly revoked and regranted below.
 revoke all on public.organizations,public.branches,public.staff_memberships,
   public.customers,public.customer_contacts,public.units,public.unit_customer_relationships,
   public.onsite_visits,public.repair_orders,public.ro_line_items,public.activity_events,
