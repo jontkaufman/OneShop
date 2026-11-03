@@ -1,5 +1,15 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## Module 01 Quick Add / Create RO review
+
+Open [unit-ro-quick-add.html](unit-ro-quick-add.html) as a standalone, fictional-data review. The global **+ Add** topbar menu offers **Add Unit** (Save / Save & Create RO) and **Create RO** (exact stock, VIN or OneShop Unit ID lookup; current owner/contact summary; editable suggested RO number; brief description; optional lines). Existing Unit identity is reused; duplicate VIN, stock and RO number entries are blocked in the local demonstration.
+
+The page is compiled from `prototypes/unit-ro-quick-add.source.html`, `prototypes/unit-ro-quick-add.js`, `styles/unit-ro-quick-add.css`, and the shared `styles/tokens.css` and `styles/oneshop.css`. Build with `python3 scripts/build-unit-ro-quick-add.py`; **do not manually fork color/theme styling in the compiled HTML**.
+
+This is an **offline UI prototype**. The mock next-RO number is not a concurrency-safe allocator and owner data is fictional. Production must resolve current ownership through authorized relationships, enforce RO/create and override capabilities server-side, and allocate numbers atomically. See [WF-07](../docs/workflows/07-quick-add-unit-and-ro.md).
+
+
+
 ## v0.5 — Per-role unit identification settings
 
 **Settings → Unit Identification** provides a compact role selector, primary and secondary identifiers, live unit preview, restore defaults, and collapsed summary of all role profiles. Example defaults: writer = customer + RO; technician = RO + VIN suffix; porter/lot = stock number + VIN suffix; sales = stock + year/make/model.
