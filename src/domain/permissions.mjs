@@ -149,6 +149,19 @@ export function mayAssignPermission({actorAccess,actorIsOwner=false,targetIsSelf
     &&sensitiveManager&&!hasPermission(actorAccess,sensitiveManager))return false;
  return true;
 }
+/** Use the same effective access for universal search and module page gating. */
+export function searchFieldGrants(access){
+ return {
+  unitRead:hasPermission(access,'unit.read'),
+  vinRead:hasPermission(access,'unit.vin.read'),
+  stockRead:hasPermission(access,'unit.stock.read'),
+  locationRead:hasPermission(access,'unit.location.read'),
+  customerRead:hasPermission(access,'customer.read'),
+  contactRead:hasPermission(access,'customer.contact.read'),
+  roRead:hasPermission(access,'ro.read'),
+  workRead:hasPermission(access,'ro.work.read')
+ };
+}
 export function visibleModules(access){
  return Object.entries(MODULES).filter(([key])=>access?.modules?.[key]===true)
    .map(([key,meta])=>({key,...meta}));
