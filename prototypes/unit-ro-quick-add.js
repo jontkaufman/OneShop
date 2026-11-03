@@ -1,4 +1,5 @@
 (function(){'use strict';
+/*__ONE_SEARCH_DOMAIN__*/
 const $=id=>document.getElementById(id);
 const initial=[
 {id:'U-001',type:'RV',year:'2022',make:'Grand Design',model:'Reflection 311BHS',vin:'573FR3827N9924101',stock:'',customer:'Jordan Ellis',phone:'(707) 555-0169',email:'jordan@example.com',ro:'RO-10482',visit:'Checked in',location:'DO-01'},
@@ -27,17 +28,22 @@ function render(){const list=$('units-list');list.replaceChildren();const matche
  for(const u of matches){const row=mk('div','unit-row'+(u.id===selected?' active':''));const main=mk('div','unit-main');main.append(mk('div','unit-title',identity(u)),mk('div','unit-sub',[u.year,u.make,u.model].filter(Boolean).join(' ')+' · '+u.id),mk('div','record-line',u.location+' · '+badge(u)));const b=mk('button','btn secondary','View unit');b.type='button';b.dataset.unit=u.id;b.addEventListener('click',()=>{selected=u.id;render();});row.append(main,b);list.append(row);}
  renderDetail();renderRecentROs();}
 function renderDetail(){const el=$('detail-content');el.replaceChildren();const u=units.find(x=>x.id===selected);if(!u){el.append(mk('p','muted','Choose a unit to review.'));return;}
- const data=[['Role identification',identity(u)],['Unit reference',u.id],['VIN',u.vin||'Not recorded'],['Stock number',u.stock||'Not recorded'],['Current owner / account',u.customer||'Unassigned'],['Owner contact',[(u.phone||''),(u.email||'')].filter(Boolean).join(' · ')||'Not recorded'],['Associated ROs',ros.filter(r=>r.unitId===u.id).map(r=>r.number).join(', ')||'Not yet opened'],['Last known position',u.location||'Unknown'],['Visit status',u.visit]];
+ const grants=searchRoles[$('role').value]??searchRoles.porter;
+ const data=[['Role identification',identity(u)],['Unit reference',u.id],
+   ...(grants.vinRead?[['VIN',u.vin||'Not recorded']]:[]),
+   ...(grants.stockRead?[['Stock number',u.stock||'Not recorded']]:[]),
+   ...(grants.customerRead?[['Current owner / account',u.customer||'Unassigned']]:[]),
+   ...(grants.contactRead?[['Owner contact',[(u.phone||''),(u.email||'')].filter(Boolean).join(' · ')||'Not recorded']]:[]),
+   ...(grants.roRead?[['Associated ROs',ros.filter(r=>r.unitId===u.id).map(r=>r.number).join(', ')||'Not yet opened']]:[]),
+   ['Last known position',u.location||'Unknown'],['Visit status',u.visit]];
  for(const [label,value] of data){const row=mk('div','kv');row.append(mk('span','',label),mk('strong','',value));el.append(row);}}
 function notice(id,txt,isError){const n=$(id);n.textContent=txt;n.dataset.type=isError?'error':'ok';}
-$('role').addEventListener('change',()=>{syncAddPermissions();render();});
-$('lookup-form').addEventListener('submit',e=>{e.preventDefault();const value=$('search-value').value.trim();if(!value){notice('lookup-feedback','Enter a VIN or stock number.',true);return;}
- search={kind:$('search-kind').value,value};const found=units.filter(u=>String(u[search.kind]||'').toLowerCase()===value.toLowerCase());if(found.length)selected=found[0].id;
- notice('lookup-feedback',found.length?found.length+' matching unit(s) found. Select the existing record.':'No matching unit found in these sample records.',!found.length);render();});
-$('clear-search').addEventListener('click',()=>{search=null;$('search-value').value='';$('lookup-feedback').textContent='';render();});
-
+$('role').addEventListener('change',()=>{syncAddPermissions();closeGlobalSearch(false);render();});
 function renderRecentROs(){
  const el=$('recent-ros');el.replaceChildren();
+ const allowed=(searchRoles[$('role').value]??searchRoles.porter).roRead;
+ $('recent-ro-section').hidden=!allowed;
+ if(!allowed)return;
  for(const ro of ros.slice().reverse().slice(0,5)){
   const u=units.find(x=>x.id===ro.unitId),row=mk('div','recent-ro-row'),info=mk('div','');
   info.append(mk('b','',ro.number),mk('p','',ro.description),mk('span','record-badge',u?identity(u):'Unit missing'));
@@ -80,8 +86,8 @@ function openModal(mode,opts={}){
  }else{
   $('modal-ro-form').reset();$('ro-line-items').replaceChildren();$('ro-match-results').replaceChildren();
   $('ro-number').value=nextRO();roUnitId=null;$('ro-connected-unit').hidden=true;
-  if(opts.unitId){const u=units.find(x=>x.id===opts.unitId);if(u){selectROUnit(u);$('ro-id-kind').value=u.stock?'stock':u.vin?'vin':'id';$('ro-id-value').value=u[$('ro-id-kind').value]||u.id;}}
-  $('ro-id-value').focus();
+  if(opts.unitId){const u=units.find(x=>x.id===opts.unitId);if(u)selectROUnit(u);}
+  $('ro-open-global-search').focus();
  }
 }
 function closeModal(){
@@ -92,10 +98,11 @@ $('modal-close').onclick=closeModal;$('modal-cancel').onclick=closeModal;
 $('action-modal').addEventListener('mousedown',e=>{if(e.target===$('action-modal'))closeModal()});
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){
+  if(globalSearchOpen)return;
   if(!$('action-modal').hidden){closeModal();return;}
   toggleAddMenu(false);
  }
- if(e.key==='Tab'&&!$('action-modal').hidden){
+ if(e.key==='Tab'&&!$('action-modal').hidden&&!globalSearchOpen){
   const focusable=[...$('action-modal').querySelectorAll('button:not([hidden]):not(:disabled),input:not([hidden]),select:not([hidden]),textarea:not([hidden])')]
     .filter(x=>x.getClientRects().length);
   if(focusable.length){const first=focusable[0],last=focusable.at(-1);
@@ -142,26 +149,17 @@ function selectROUnit(u){
  target.append(mk('strong','',[u.year,u.make,u.model].filter(Boolean).join(' ')||u.id));
  target.append(mk('p','muted','Stock '+(u.stock||'Not recorded')+' · VIN '+(u.vin||'Not recorded')+' · '+u.id));
  const owner=mk('div','connected-owner');
- for(const [label,value] of [['Current owner / account',u.customer||'Unassigned'],['Phone',u.phone||'Not recorded'],['Email',u.email||'Not recorded'],['Existing ROs',ros.filter(r=>r.unitId===u.id).map(r=>r.number).join(', ')||'None']]){
+ const grants=searchRoles[$('role').value]??searchRoles.porter;
+ const ownerDetails=[
+   ...(grants.customerRead?[['Current owner / account',u.customer||'Unassigned']]:[]),
+   ...(grants.contactRead?[['Phone',u.phone||'Not recorded'],['Email',u.email||'Not recorded']]:[]),
+   ...(grants.roRead?[['Existing ROs',ros.filter(r=>r.unitId===u.id).map(r=>r.number).join(', ')||'None']]:[])
+ ];
+ for(const [label,value] of ownerDetails){
   const item=mk('div','owner-kv');item.append(mk('small','',label),mk('b','',value));owner.append(item);
  }
  target.append(owner);$('ro-match-results').replaceChildren();
 }
-function findROUnit(){
- modalError('');roUnitId=null;$('ro-connected-unit').hidden=true;
- const kind=$('ro-id-kind').value,value=$('ro-id-value').value.trim();
- if(!value){modalError('Enter a stock number, VIN, or OneShop unit reference.');return;}
- roSearchResults=resolveUnit(kind,value);const target=$('ro-match-results');target.replaceChildren();
- if(!roSearchResults.length){target.append(mk('p','muted','No exact unit match. Confirm the identifier or add the unit first.'));return;}
- if(roSearchResults.length===1){selectROUnit(roSearchResults[0]);return;}
- target.append(mk('p','muted','More than one unit has this identifier. Select the correct record before continuing.'));
- for(const u of roSearchResults){const row=mk('div','match-option'),body=mk('div','');
-  body.append(mk('b','',identity(u)),mk('p','muted',[u.year,u.make,u.model,u.id].filter(Boolean).join(' · ')));
-  const button=mk('button','btn secondary','Select unit');button.type='button';button.onclick=()=>selectROUnit(u);row.append(body,button);target.append(row);
- }
-}
-$('ro-find-unit').onclick=findROUnit;
-$('ro-id-value').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();findROUnit();}};
 $('ro-reset-number').onclick=()=>{$('ro-number').value=nextRO();modalError('');};
 $('add-ro-line').onclick=()=>{
  const container=$('ro-line-items'),row=mk('div','optional-line');
@@ -185,6 +183,7 @@ $('ro-save').onclick=saveRO;
 $('modal-ro-form').onsubmit=e=>{e.preventDefault();saveRO()};
 $('modal-unit-form').onsubmit=e=>{e.preventDefault();saveUnit(false)};
 
+/*__ONE_SEARCH_CONTROLLER__*/
 syncAddPermissions();
 render();
 })();
