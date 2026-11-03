@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-theme="classic">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OneShop | Users, Roles &amp; Permissions</title>
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/users-permissions.css">
+</head>
+<body>
+<div class="admin-shell">
+ <aside class="admin-sidebar">
+  <div class="brand">ONE<span>SHOP</span></div>
+  <div class="side-label">Dealership</div>
+  <button class="admin-nav" data-page="users" type="button"><span>▤</span> Users</button>
+  <button class="admin-nav" data-page="roles" type="button"><span>♧</span> Roles &amp; Permissions</button>
+  <button class="admin-nav" data-page="positions" type="button"><span>◇</span> Positions</button>
+  <button class="admin-nav" data-page="modules" type="button"><span>▦</span> Modules</button>
+  <button class="admin-nav" data-page="audit" type="button"><span>☷</span> Audit History</button>
+  <div class="side-label">Core operations</div>
+  <div class="sidebar-placeholder">Schedule &amp; Check-In</div>
+  <div class="sidebar-placeholder">Inspections</div>
+  <div class="sidebar-placeholder">Unit Management</div>
+  <div class="sidebar-placeholder">Repair Orders</div>
+  <div class="sidebar-placeholder">Follow-Ups</div>
+  <div class="sidebar-placeholder">Financials</div>
+  <p class="side-note">Offline design review. Changes affect fictional data in this page, not Supabase.</p>
+ </aside>
+ <div class="admin-main">
+  <header class="admin-topbar">
+   <div class="breadcrumb">OneShop <b>/ Administration</b></div>
+   <label class="global-input">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+    <input id="global-query" type="search" placeholder="Search OneShop..." aria-label="Search OneShop employee records" autocomplete="off">
+    <kbd>Ctrl K</kbd>
+   </label>
+   <div class="admin-top-actions">
+    <span class="demo-chip">OFFLINE REVIEW</span>
+    <button class="primary-top-add" id="top-add" type="button">+ Add</button>
+    <label class="viewer-label"><span>Viewing as</span><select id="viewer-select" aria-label="Review as employee"></select></label>
+   </div>
+  </header>
+  <div class="global-results" id="global-results" hidden aria-label="Search results" aria-live="polite"></div>
+  <main id="admin-content" class="admin-content" tabindex="-1"></main>
+ </div>
+</div>
+<div id="dialog-backdrop" class="dialog-backdrop" hidden>
+ <section class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <header class="dialog-heading"><div><p class="overline" id="dialog-kicker">Administration</p><h2 id="dialog-title">Create</h2></div><button type="button" class="icon-button" id="dialog-close" aria-label="Close dialog">×</button></header>
+  <div id="dialog-body" class="dialog-body"></div>
+  <footer class="dialog-actions"><button id="dialog-cancel" type="button" class="ui-button">Cancel</button><button id="dialog-save" type="button" class="ui-button primary">Save</button></footer>
+ </section>
+</div>
+<div id="add-menu" class="global-add-menu" hidden>
+ <button type="button" data-add-type="user">Invite employee</button>
+ <button type="button" data-add-type="role">Create role</button>
+ <button type="button" data-add-type="position">Create position</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="./users-permissions.js"></script>
+</body>
+</html>

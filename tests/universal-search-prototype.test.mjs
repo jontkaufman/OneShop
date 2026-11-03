@@ -26,9 +26,9 @@ test('search supports keyboard and global reuse for RO unit selection',()=>{
  assert.ok(controller.includes('const typed='));
 });
 test('permissions must alter searchable documents, not only displayed labels',()=>{
- assert.ok(controller.includes('customerRead:false'));
- assert.ok(controller.includes('roRead:false'));
- assert.ok(controller.includes('contactRead:false'));
+ assert.ok(controller.includes('searchFieldGrants(effectivePermissions('));
+ assert.ok(controller.includes("ROLE_TEMPLATES[role]"));
+ assert.ok(demo.includes('/*__ONE_PERMISSION_DOMAIN__*/'));
  assert.ok(controller.includes('buildAuthorizedSearchDocuments('));
  assert.ok(controller.includes('searchAuthorizedDocuments('));
  assert.ok(demo.includes('searchRoles'));
@@ -41,6 +41,8 @@ test('compiled standalone prototype inlines the real search policy and shared st
  assert.ok(built.includes('function renderGlobalSearch('));
  assert.ok(built.includes('.global-search-panel'));
  assert.ok(!built.includes('/*__ONE_SEARCH_DOMAIN__*/'));
+ assert.ok(!built.includes('/*__ONE_PERMISSION_DOMAIN__*/'));
+ assert.ok(built.includes('function searchFieldGrants('));
  assert.ok(!built.includes('/*__ONE_SEARCH_CONTROLLER__*/'));
  const script=built.match(/<script>([\s\S]*?)<\/script>/)?.[1];
  assert.ok(script);
