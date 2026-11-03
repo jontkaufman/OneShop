@@ -38,3 +38,9 @@ jobs:
           git diff --exit-code -- prototypes/users-permissions.html
       - name: Run domain and prototype smoke tests
         run: npm test
+      - name: Attach admin review page
+        uses: actions/upload-artifact@v4
+        with:
+          name: oneshop-users-permissions-review
+          path: prototypes/users-permissions.html
+          retention-days: 14
