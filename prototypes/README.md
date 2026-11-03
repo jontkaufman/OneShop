@@ -1,5 +1,18 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## v0.4 — Role-based notification handoff demonstration
+
+The offline walkthrough now includes a **Notifications** screen. Select the demo role (Service Writer, Porter, Technician, Foreman, Dispatch, PDI, Wash, Detail) to inspect that role's inbox.
+
+- Request a move: Porter inbox gets a new actionable notification. Opening it shows unit, pickup/destination information and a link to the porter queue.
+- Claim a move: Writer inbox gets a claim-status update.
+- Confirm delivery: Writer receives a completion update; the receiving role gets an actionable unit-ready notification. If destination is a Service Bay, the UI lets you specify whether a demo technician was already assigned; otherwise the foreman gets the task.
+- Opening a notification marks it **read**, not accepted. Acknowledge receiving work separately; completion/repair approval is not simulated.
+- This is a **single-browser role switch**, not two authenticated users. Notifications and move states are memory-only. No real permissions, push transport, Supabase persistence, concurrency or location capacity guarantees exist in this demo.
+
+The initial pure domain routing policy and automated tests are in `src/domain/handoff.mjs` and `tests/handoff.test.mjs`. Run `npm test` to exercise the stand-alone policy model. Full service responsibility and persistence requirements: [WF-05 Handoffs and Notifications](../docs/workflows/05-operational-handoffs-and-notifications.md).
+
+
 **Design governance:** [Enterprise Settings & Permissions UX Standard](../docs/design/settings-experience-standard.md) applies to every new/modified setting or permission. Review and polish the entire affected settings block, not just the new control.
 
 ## v0.3 — Shared styling and dealership settings
