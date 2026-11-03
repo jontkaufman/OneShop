@@ -2,7 +2,13 @@
 Status: PROPOSED. Build after Gate 0 app source, CI and environment verification. This is not an executed migration.
 
 ## Objective and acceptance outcome
-One authenticated employee of a dealership branch can locate or create a customer/unit, begin an onsite visit, associate multiple independent ROs and their jobs, identify the responsible advisor and switch to another authorized branch. No tenant can access or modify another tenant's data. This is the smallest useful authoritative record layer for future property maps, moves, QC, billing and integrations.
+One authenticated employee of a dealership branch can locate or create a customer/unit, begin an onsite visit, associate multiple independent ROs and their line items, identify the responsible advisor and switch to another authorized branch. No tenant can access or modify another tenant's data. This is the smallest useful authoritative record layer for future property maps, moves, QC, billing and integrations.
+
+## Confirmed canonical data hierarchy
+
+**Customer -> Unit (RV/vehicle) -> RO -> RO Line Item**. Treat each line item as a separately actionable service/work line with stable identity, state, owner and future price/authorization links. Earlier references to `service_job` or `work item` describe this same RO-level service line in the core hierarchy; do not build a redundant second service-job entity at Module 01. Departmental tasks and parts/labor components can attach to a line item later.
+
+Keep Unit identity permanent with effective-dated relationships to its current/former customers. RO customer/bill-to relationship is historical, linked to the RO at the time of service. Onsite visit groups physical activity and multiple ROs of the same unit as an orthogonal relationship; it does **not** interrupt the Customer -> Unit -> RO -> Line Item browsing hierarchy.
 
 ## Intended vertical slice
 1. Tenant administrator creates/configures dealership org and branch (bootstrap via trusted server flow).
@@ -10,7 +16,7 @@ One authenticated employee of a dealership branch can locate or create a custome
 3. Advisor searches by full VIN, last six VIN, stock number, unit/customer name or RO number; disambiguation required on collisions.
 4. Advisor creates/selects customer and unit; adds actual responsible/contact/ownership relationship with start/end and consent rules.
 5. Advisor creates visit; records scheduled dropoff vs actual arrival independently; can attach two simultaneous ROs on the same physical unit.
-6. Each RO contains own number, advisor, customer/bill-to, work classification, list of stable service jobs and independent progress.
+6. Each RO contains own number, advisor, customer/bill-to, work classification, list of stable RO line items and independent progress.
 7. Search/overview surfaces unit-level context, all active ROs, visit coordinating advisor, commitments, next owner and an honest 'location not yet configured' placeholder.
 8. Every write captures actor and audit record. Users can safely sign out/switch branch, with cache cleared/refiltered.
 
@@ -27,7 +33,7 @@ All application IDs are UUIDs; time points timestamptz; external IDs stored sepa
 - unit_customer_relationships: id, organization_id, unit_id, customer_id, relation_type, valid_from/to (history)
 - onsite_visits: id, organization_id, branch_id, unit_id, coordinating_advisor_membership_id, scheduled_dropoff_at, arrived_at, promised_pickup_at, promise_type, departed_at, status
 - repair_orders: id, organization_id, branch_id, visit_id, unit_id, customer_id, advisor_membership_id, source_system, external_ro_id, ro_number, work_type, status, created_at
-- service_jobs: id, organization_id, branch_id, repair_order_id, job_number, title, work_state, owner_user_id?; job numbering stable and scoped
+- ro_line_items: id, organization_id, branch_id, repair_order_id, line_number, title, work_state, owner_user_id?; stable per-RO line numbering and identity
 - audit_events: id, organization_id, branch_id?, actor_user_id, action, entity_type, entity_id, from_state/to_state, occurred_at, correlation_id, limited structured metadata
 - external_references (future adapter compatibility): id, organization_id, source_system, external_kind, external_id, internal_kind, internal_id; unique scoped source-key relationship.
 
@@ -36,7 +42,7 @@ All application IDs are UUIDs; time points timestamptz; external IDs stored sepa
 - RO unit must match the visit's unit, unless an explicit future exception is modeled; no update should silently reassign it.
 - Permit multiple simultaneously open ROs per unit/visit; do not create a unique constraint on RO.unit_id.
 - A unit's external identifier might be absent/duplicated or inaccurate. Treat VIN equality as a search/match candidate, not an unchecked tenant-wide merge.
-- Service job has one RO; department tasks later reference this job as needed.
+- RO line item has exactly one RO; department tasks and parts/labor components later reference the line-item ID. RO lines remain accessible through the unit's current and historic customer relationships, subject to strict privacy policy.
 - Separate active and historical ownership relationships. Customer display at time of older RO does not dynamically become the new owner's private information.
 
 ## Security and permission design
@@ -56,7 +62,7 @@ Private storage and sensitive contact fields require separate policies. RLS SELE
 
 ## API/command and query contract
 Read: list-authorized-branches, search-units, get-unit-overview, get-visit-context, get-ro-details, list-my-work (later), list-customer-history (permission filtered).
-Writes: create-customer, create-unit, link-unit-customer, start-visit, attach-ro-to-visit, add-service-job, assign-advisor, update-promise. Each validates actor, tenant, branch, entity linkage, expected version and audit.
+Writes: create-customer, create-unit, link-unit-customer, start-visit, attach-ro-to-visit, add-ro-line-item, assign-advisor, update-promise. Each validates actor, tenant, branch, entity linkage, expected version and audit.
 Import: native records first. A future CDK connector uses external_references to upsert without overwriting locally owned operational history.
 Represent failure explicitly: not_authenticated, no_branch_access, permission_denied, version_conflict, duplicate_external_reference, invalid_transition, invalid_unit_reference.
 Avoid promising GraphQL or bespoke REST before deployment platform decisions. Use typed command interface so implementation can be RPC/Edge/server handler as appropriate.
@@ -71,10 +77,10 @@ Backfill is not needed initially but migrations must remain forward-compatible w
 - T01: user in tenant A cannot select/read/change tenant B customers, units, visits, ROs, storage or audit, including guessed IDs.
 - T02: member of branch A without branch B membership cannot access branch B operational rows.
 - T03: user cannot self-promote to manager or approve own invitation simply by altering frontend inputs or user metadata.
-- T04: same unit and visit has two open ROs with independent advisor, status, jobs and promises; visit coordinating advisor is explicit.
+- T04: same unit and visit has two open ROs with independent advisor, status, RO line items and promises; visit coordinating advisor is explicit.
 - T05: two units may share last-six VIN substring; search shows disambiguation and never silently merges.
 - T06: older owner and newer owner cannot view each other's private contacts, payments and attachments through unit history.
-- T07: RO cannot link unit from different organization or visit with mismatched unit; database rejects it.
+- T07: RO cannot link unit from different organization or visit with mismatched unit; RO line item cannot link an RO in a different organization/branch; database rejects both.
 - T08: duplicated client retries create no duplicate RO when same idempotency key/source key used.
 - T09: branch switch cannot leak cached record results or stale row mutation into another branch.
 - T10: audit records correct actor/action before/after and failures are visible without disclosing secret/customer fields.
