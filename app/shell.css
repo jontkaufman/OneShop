@@ -14,3 +14,5 @@
 #system-message[data-error=true]{border-color:#cd8878;color:#872b24;background:#fff3ee}
 [hidden]{display:none!important}
 @media(max-width:850px){.shell{display:block}.sidebar{padding:16px}.sidebar .aside-note{margin:10px 0}.content{padding:24px 16px}.lookup-line{display:grid;grid-template-columns:1fr}.lookup-line .field{min-width:0}.compact-context{align-items:flex-start}.record-row{flex-direction:column}}
+
+.context-picker{flex:1;max-width:640px}.context-picker select{width:100%}
