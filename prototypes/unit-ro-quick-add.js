@@ -1,4 +1,5 @@
 (function(){'use strict';
+/*__ONE_PERMISSION_DOMAIN__*/
 /*__ONE_SEARCH_DOMAIN__*/
 const $=id=>document.getElementById(id);
 const initial=[
