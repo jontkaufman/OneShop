@@ -7,6 +7,19 @@ Decision labels: CONFIRMED = explicitly agreed operating requirement; PROPOSED =
 **CONFIRMED:** OneShop is the coordination layer between the front desk, service shop, physical lot, parts, warranty, wash/detail, PDI, and sales. Repair orders (ROs) are the operational anchor; a stable RV/unit record is the physical anchor. Coordinate work and communications, not duplicate a complete CDK/DMS. CDK is a future external data source, with fields, rights, and writeback unverified. Intertrak inspection execution remains a separate product now; future integration is deferred.
 **PROPOSED:** Design OneShop as multi-tenant SaaS from first migration, with organization -> branch/site -> user memberships. Preserve branch and tenant boundaries in every persisted domain record.
 
+## Canonical business record hierarchy (CONFIRMED 2026-11-02)
+
+**Customer → Unit (RV or other vehicle) → Repair Order (RO) → RO Line Item**
+
+This is the primary customer-facing navigation, search and commercial/service-record hierarchy. One customer can have multiple units; one unit can have multiple ROs including simultaneous open ROs; one RO can have multiple independently tracked line items.
+
+- **Customer**: the responsible customer/account context for that particular unit/RO; record authorized contacts, billing party and historical relationships explicitly.
+- **Unit**: the persistent physical RV/vehicle identity, not a record that disappears when sold or transferred. Ownership/customer linkage is effective-dated, so the hierarchy is a business **view**, not a cascading delete tree or permanent 1-owner-only data structure.
+- **RO**: an individual repair order for this unit with its own advisor, work type, lifecycle and external number. A historical RO captures its original customer/bill-to and does not get reassigned when the unit changes owners.
+- **RO Line Item**: the smallest primary service/work scope line under the RO, with its own description, assignment, blockers, authorization, completion and eventually price. Parts, labor, warranty evidence, findings and department tasks can reference the line item, but are not parallel RO-level work identities.
+
+**Related operational records (not extra levels):** an onsite visit represents a unit's physical presence and may link many ROs; live occupancy, moves and key custody reference the stable unit/visit rather than a separate RO-specific location. Organization/branch scope controls multi-tenant access above this business hierarchy.
+
 ## Jobs OneShop must do
 - At intake, associate a customer, one physical unit, one onsite visit, and one or more ROs; multiple simultaneous open ROs may belong to the same unit.
 - Make current confirmed location visible and distinct from requested destination and in-flight move.
@@ -39,7 +52,7 @@ No separate Delivery department is assumed. Individuals may have multiple roles.
 - **Unit** (CONFIRMED): stable RV identity with VIN, stock number, make/model, identifying photo; last six VIN + abbreviated year/make/model + customer for operating display. Ownership/customer links can change without losing asset history.
 - **Onsite visit** (CONFIRMED): physical arrival/departure, pickup promise, release authority spanning ROs. Must not equal one RO.
 - **Repair order** (CONFIRMED): customer, unit, advisor, dates, work items, external source/number, communication. One unit can have multiple concurrent ROs.
-- **Service job** (CONFIRMED across invoice design): stable work identity linking proposed scope, performed work, evidence, authorizations, pricing and billing. Work item and service job may be one record or distinct types; decide during detailed schema design.
+- **RO line item** (CONFIRMED hierarchy): stable child of a single RO, representing an actionable service/work line with its own progress, evidence, blockers, authorizations and eventually pricing. Earlier planning called this a service job/work item; the canonical business name is **RO Line Item**. Department tasks and parts/labor breakdowns are separate subordinate/supporting records.
 - **Finding -> recommendation** (commercial phase): a condition and proposed correction persist across visits; defer/decline are not completed jobs.
 - **Location and map placement** (CONFIRMED): a physical space ID is stable even when renamed or shown on multiple map views.
 - **Move / handoff / blocker / alert** (CONFIRMED): each independent record has its own actor, owner, lifecycle and audit trail.
