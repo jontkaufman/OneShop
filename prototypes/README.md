@@ -1,5 +1,11 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## Users, Roles & Permissions — Review
+
+The offline [Users and Permissions review](users-permissions.html) demonstrates an enterprise-dense Users page with Contact / Position / Payroll / Permissions / Activity tabs, starter role templates, custom role create/clone/edit/archive, individual overrides, job positions, and basic/advanced module toggles. Initial viewer is the **fictional Dealership Owner**. Use Viewing as to demonstrate reduced access; pay data shown is fictional.
+
+The real database registry, RLS capability resolver, and internal administrative commands are already applied to the connected OneShop Supabase project. The review page is not authenticated, does not invite actual employees, and does not call the database. Rebuild using `python3 scripts/build-users-permissions.py`. Details and security gates: [WF-09](../docs/workflows/09-identity-roles-permissions.md).
+
 ## Module 01 — Universal Search (v0.6)
 
 The standalone [Unit / RO prototype](unit-ro-quick-add.html) now has one global top-navigation search. Type customer, phone/email, VIN (including suffix), stock, RO, unit model, location or work description. Results are grouped by **Customers / Units / Repair Orders**, ranked for exact identifiers first, and navigable with arrows, Enter, Escape or Ctrl/⌘+K. No "search by" selector exists in the Units page or Create RO modal.
