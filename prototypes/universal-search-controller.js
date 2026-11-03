@@ -89,10 +89,6 @@ function renderGlobalSearch(){
  }
  // Keyboard order follows visible group order, not the global ranked array.
  const buttons=[...container.querySelectorAll('[data-search-index]')];
- globalSearchResults=buttons.map(b=>{
-   const kind=order.find(k=>grouped.get(k).some(i=>i.id===results[Number(b.dataset.searchIndex)]?.id));
-   return null;
- }); // temporary placeholder replaced below by flattening displayed groups
  globalSearchResults=order.flatMap(kind=>grouped.get(kind));
  setGlobalSearchActive(0);
 }
@@ -101,7 +97,7 @@ function setGlobalSearchActive(index){
  if(!buttons.length){globalSearchActiveIndex=-1;return;}
  globalSearchActiveIndex=(index+buttons.length)%buttons.length;
  buttons.forEach((b,i)=>b.classList.toggle('is-active',i===globalSearchActiveIndex));
- buttons[globalSearchActiveIndex].scrollIntoView({block:'nearest',behavior:'instant'});
+ buttons[globalSearchActiveIndex].scrollIntoView({block:'nearest'});
 }
 function openGlobalSearch(mode='all'){
  toggleAddMenu(false);
