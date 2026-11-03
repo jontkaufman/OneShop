@@ -1,7 +1,7 @@
 <!doctype html><html lang="en" data-theme="classic"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light"><title>OneShop | Module 01 Review</title>
-<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/unit-ro-quick-add.css"></head>
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/oneshop.css"><link rel="stylesheet" href="../styles/unit-ro-quick-add.css"><link rel="stylesheet" href="../styles/universal-search.css"></head>
 <body><div class="shell"><aside class="sidebar">
   <div class="brand">ONE<span>SHOP</span></div>
   <div class="side-label">Operations</div>
@@ -14,12 +14,23 @@
   <p class="aside-note"><b>Module 01 · Offline UI review</b><br>Actual Supabase tables and policies exist. This file contains fictional example records and makes no database requests.</p>
 </aside><div class="main"><header class="topbar">
 <div class="crumb">OneShop <b>/ Core Records / Units</b></div>
+<div class="nav-search" role="search">
+ <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+ <input id="global-search-input" type="search" aria-label="Search all accessible OneShop records" aria-controls="global-search-panel" aria-expanded="false" autocomplete="off" spellcheck="false" placeholder="Search customers, VIN, stock, RO, work…">
+ <kbd aria-hidden="true">Ctrl K</kbd>
+</div>
 <div class="topbar-actions"><span class="pilot">OFFLINE DEMO · NOT CONNECTED</span>
 <button type="button" class="top-add" id="add-button" aria-haspopup="menu" aria-expanded="false">+ Add <span aria-hidden="true">⌄</span></button>
 <div class="add-popover" id="add-menu" role="menu" hidden>
 <button class="add-option" type="button" role="menuitem" id="top-add-unit"><b>Add Unit</b><small>Save unit or save and start a repair order</small></button>
 <button class="add-option" type="button" role="menuitem" id="top-create-ro"><b>Create RO</b><small>Find a unit by its unique identifier</small></button>
-</div></div></header><main class="content">
+</div></div></header>
+<div class="global-search-backdrop" id="global-search-backdrop" hidden></div>
+<section class="global-search-panel" id="global-search-panel" role="region" aria-label="Search results throughout OneShop" hidden>
+ <div class="global-search-heading"><div><strong id="global-search-heading">Search across your accessible records</strong><span id="global-search-count" class="muted"></span></div><button id="global-search-close" type="button" class="btn secondary">Close <kbd>Esc</kbd></button></div>
+ <div id="global-search-results" class="global-search-results" role="list" aria-live="polite"></div>
+ <div class="global-search-foot"><span>↑ ↓ navigate · Enter open · Esc close</span><span>Results respect your active role in this demo</span></div>
+</section><main class="content">
 <div class="head-controls"><div><div class="eyebrow">Module 01 / Core Records</div>
 <h1>Units &amp; Repair Orders</h1>
 <p class="subtitle">Find existing units, register new vehicles and link repair orders without duplicating records. Use <b>Add</b> in the top bar to begin.</p></div>
@@ -41,15 +52,10 @@
 </div>
 <div class="work-area">
 <div>
-<section class="card"><div class="activity-heading"><div><h2>Find a unit</h2><p class="muted">Exact VIN or stock number. Confirm matching records before adding another.</p></div><span class="pill">Shared Unit record</span></div>
-<form id="lookup-form" class="split-search"><div class="field"><label for="search-kind">Search by</label>
-<select id="search-kind"><option value="vin">VIN</option><option value="stock">Stock number</option></select></div>
-<div class="field"><label for="search-value">Identifier</label><input id="search-value" autocomplete="off" placeholder="Enter a VIN or stock number" value=""></div>
-<button type="submit" class="btn primary">Find unit</button></form>
+<section class="card"><div class="activity-heading"><div><h2>Recent units</h2><p class="muted">One record per vehicle. Use the universal search above to find any accessible record instantly.</p></div><button id="open-global-search" type="button" class="btn secondary"><span aria-hidden="true">⌕</span> Search OneShop</button></div>
 <div id="lookup-feedback" role="status" class="inline-result" aria-live="polite"></div>
-<div class="aux-actions"><strong style="font-size:13px">Recent units</strong><button id="clear-search" type="button" class="btn secondary">Show all</button></div>
 <div class="units-list" id="units-list"></div></section>
-<section class="card"><div class="card-head"><div><h2>Recent repair orders</h2><p class="muted">ROs reference existing units. Multiple ROs may belong to one vehicle.</p></div><span class="pill">Operational records</span></div>
+<section class="card" id="recent-ro-section"><div class="card-head"><div><h2>Recent repair orders</h2><p class="muted">ROs reference existing units. Multiple ROs may belong to one vehicle.</p></div><span class="pill">Operational records</span></div>
 <div id="recent-ros" aria-live="polite"></div></section>
 </div>
 <div>
@@ -81,12 +87,9 @@
  </form>
  <form id="modal-ro-form" hidden novalidate>
  <div class="modal-section"><h3>Find the unit</h3>
- <div class="inline-id-search"><div class="field"><label for="ro-id-kind">Identify by</label><select id="ro-id-kind"><option value="stock">Stock number</option><option value="vin">VIN / Serial</option><option value="id">OneShop unit reference</option></select></div>
- <div class="field"><label for="ro-id-value">Exact identifier</label><input id="ro-id-value" placeholder="Enter stock, VIN or unit ID" autocomplete="off"></div>
- <button type="button" class="btn secondary" id="ro-find-unit">Find unit</button></div>
- <p class="short-info">Search uses a unique vehicle identifier. Make/model are not accepted as a match.</p>
- <div id="ro-match-results" class="match-area"></div>
- <div id="ro-connected-unit" class="connected-unit" hidden></div>
+ <div class="ro-unified-lookup"><button type="button" class="btn secondary" id="ro-open-global-search"><span aria-hidden="true">⌕</span> Find a unit in OneShop</button><p class="short-info">Use the same global search for VIN, stock, customer, RO or any other permitted record. Choose the exact unit from the results.</p></div>
+<div id="ro-match-results" class="match-area"></div>
+<div id="ro-connected-unit" class="connected-unit" hidden></div>
  </div>
  <div class="modal-section"><h3>Repair order details</h3>
  <div class="grid2"><div class="field"><label for="ro-number">RO number <span class="optional-mark">Editable</span></label><input id="ro-number" required maxlength="60" autocomplete="off"></div>
