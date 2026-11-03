@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en" data-theme="classic">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OneShop | Users, Roles &amp; Permissions</title>
+<meta name="color-scheme" content="light">
+<style>
+/* OneShop shared theme tokens — source of truth for ALL application screens.
+   Palette changes require editing only these values, not individual page CSS.
+   Future React app imports tokens.css and oneshop.css once in the app shell. */
+:root,[data-theme="classic"]{
+ --os-canvas:#eff3f7;--os-surface:#ffffff;--os-surface-muted:#f5f8fa;
+ --os-ink:#162b3e;--os-muted:#4d6072;--os-line:#c8d5df;--os-input-line:#98afc0;
+ --os-sidebar:#142b40;--os-sidebar-text:#e5eef5;--os-sidebar-highlight:#a4ddfa;--os-nav-active:#31536c;
+ --os-accent:#0c5f91;--os-accent-dark:#0c4b72;--os-accent-hover:#094b75;--os-accent-soft:#e6f2fa;
+ --os-accent-line:#9ac1d8;--os-focus:#0b72ab;--os-focus-wash:rgba(13,100,153,.15);
+}
+[data-theme="slate"]{
+ --os-canvas:#eef1f4;--os-surface:#ffffff;--os-surface-muted:#f6f8fa;
+ --os-ink:#1e293b;--os-muted:#475569;--os-line:#c7d1db;--os-input-line:#94a3b8;
+ --os-sidebar:#182333;--os-sidebar-text:#e2e8f0;--os-sidebar-highlight:#cbd5e1;--os-nav-active:#334155;
+ --os-accent:#475569;--os-accent-dark:#334155;--os-accent-hover:#334155;--os-accent-soft:#edf2f7;
+ --os-accent-line:#b8c4d2;--os-focus:#334155;--os-focus-wash:rgba(71,85,105,.17);
+}
+[data-theme="forest"]{
+ --os-canvas:#f1f5f2;--os-surface:#ffffff;--os-surface-muted:#f4f8f5;
+ --os-ink:#17332c;--os-muted:#4a6259;--os-line:#c2d6cc;--os-input-line:#8faf9e;
+ --os-sidebar:#17362d;--os-sidebar-text:#e7f4ec;--os-sidebar-highlight:#b5e5cb;--os-nav-active:#2e5846;
+ --os-accent:#216b53;--os-accent-dark:#1a5743;--os-accent-hover:#18523f;--os-accent-soft:#e0f3e8;
+ --os-accent-line:#98cbb1;--os-focus:#216b53;--os-focus-wash:rgba(33,107,83,.17);
+}
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#1a293a;background:#f4f6f8;--ink:#23374a;--muted:#6d7e8c;--border:#dce3e9;--navy:#162a3a;--blue:#226c9c;--soft:#eaf2f7;--green:#1c745d;--warn:#a36c19}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}.app{display:grid;grid-template-columns:222px 1fr;min-height:100vh}.sidebar{background:var(--navy);color:#ccd7e1;padding:24px 14px}.brand{font-size:22px;letter-spacing:-.6px;font-weight:750;color:white;padding:0 12px 18px}.brand span{color:#77b5dc}.side-label{padding:18px 13px 8px;text-transform:uppercase;letter-spacing:1.4px;font-size:10px;font-weight:800;opacity:.53}.nav-btn{width:100%;color:#d6e0e8;border:0;text-align:left;background:transparent;padding:12px 13px;border-radius:8px;margin:2px 0;font-weight:600;font-size:13px}.nav-btn.active,.nav-btn:hover{background:#284358;color:white}.aside-note{margin:40px 10px 0;border:1px solid #3a5669;color:#b8cad5;border-radius:10px;padding:12px;line-height:1.5;font-size:11px}.main{min-width:0}.topbar{height:66px;background:white;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:0 34px}.crumb{font-size:12px;color:#688091}.topbar b{color:#223a4b}.pilot{font-size:11px;background:#fff7e5;color:#835b19;border:1px solid #efd8a8;padding:7px 10px;border-radius:6px;font-weight:700}.content{max-width:1240px;margin:0 auto;padding:32px 34px 80px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:#6d889c;font-weight:800;text-transform:uppercase;margin-bottom:7px}h1{font-size:27px;letter-spacing:-.7px;margin:0 0 9px}h2{font-size:19px;letter-spacing:-.4px;margin:0 0 7px}h3{font-size:14px;margin:0 0 10px}.subtitle{font-size:13px;color:var(--muted);margin-bottom:25px;max-width:750px;line-height:1.6}.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:23px;box-shadow:0 3px 18px #1c314407}.card+.card{margin-top:16px}.card-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px}.muted{color:var(--muted);font-size:12px;line-height:1.55}.small{font-size:11px}.steps{display:flex;align-items:center;gap:8px;margin:0 0 20px}.step{flex:1;display:flex;gap:9px;align-items:center;border-bottom:3px solid #dfe7ec;padding:12px 3px;color:#8b9aa6;font-size:12px;font-weight:700}.step span{width:23px;height:23px;display:grid;place-items:center;border-radius:50%;background:#e8eef2}.step.active{color:#276f9c;border-color:#276f9c}.step.active span{background:#dceefa}.step.done{color:#34765e;border-color:#75b29b}.step.done span{background:#dcf2e8}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.field{margin-bottom:16px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid #ccd7df;border-radius:7px;padding:11px 12px;color:#20364a;background:white;font-size:13px;min-height:42px}.field textarea{min-height:85px;resize:vertical}.hint{margin:6px 0 0;font-size:11px;color:#83939f;line-height:1.4}.seg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:21px}.seg button{text-align:left;border:1px solid #d9e2e8;background:#fff;border-radius:10px;padding:16px}.seg button.selected{border-color:#407c9b;background:#edf6fb;box-shadow:inset 0 0 0 1px #407c9b}.seg strong{display:block;font-size:13px;margin-bottom:6px}.seg span{display:block;font-size:11px;color:#758594;line-height:1.5}.btn{padding:11px 16px;border-radius:7px;background:white;color:#284357;border:1px solid #bacbd6;font-size:12px;font-weight:750}.btn.primary{background:#1b638f;color:white;border-color:#1b638f}.btn.secondary{background:#eaf2f7;color:#225c80;border-color:#cbdde9}.btn.danger{color:#99531b;border-color:#e9caaa}.actions{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid #e7edf1;gap:12px}.right{display:flex;gap:8px}.callout{border-left:3px solid #3183b8;background:#eef6fb;padding:14px 16px;border-radius:0 7px 7px 0;font-size:12px;line-height:1.6;margin:8px 0 20px}.callout strong{display:block;color:#20587b}.callout.warning{background:#fffaee;border-color:#b9872c}.two-col{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:18px}.flag{border-radius:15px;padding:5px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;background:#e9f3e9;color:#2c7a53;display:inline-block}.flag.pending{background:#fff5db;color:#92631a}.flag.blue{background:#e5f2fa;color:#1b689c}.stat{padding:13px;background:#f4f7f9;border:1px solid #e1e8ed;border-radius:7px}.stat span{display:block;font-size:11px;color:#8797a3}.stat strong{font-size:14px;color:#263d4e}.ro-row{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid #edf1f4}.line{background:#f8fafb;padding:11px 12px;margin-top:8px;border-left:2px solid #c8dae5;border-radius:4px;font-size:12px}.list{margin:0;padding:0;list-style:none}.list li{padding:12px 0;border-bottom:1px solid #e9eff2;font-size:12px}.timeline{position:relative;padding:6px 0 6px 22px;margin-left:9px;border-left:2px solid #d2e1ea}.timeline-card{position:relative;margin:10px 0 23px;border:1px solid #dbe5eb;border-radius:9px;padding:15px 18px}.timeline-card:before{position:absolute;content:"";left:-29px;top:19px;width:12px;height:12px;border:3px solid white;background:#2d719a;border-radius:50%;box-shadow:0 0 0 2px #a7c9dc}.timeline-card.future:before{background:#c48a2c;box-shadow:0 0 0 2px #e9cf9d}.timeline-header{display:flex;align-items:center;justify-content:space-between;gap:15px}.timeline-title{font-weight:750;font-size:13px}.event{display:flex;gap:10px;border-top:1px solid #e8eef2;padding:10px 0;font-size:12px}.event time{width:86px;flex:0 0 86px;color:#8294a3}.event b{font-weight:750}.event .muted{margin-top:3px}.timeline-inner{margin-top:13px;padding-top:5px;border-top:1px solid #e8eef2}.pill{padding:5px 8px;border:1px solid #d8e5ec;border-radius:16px;font-size:10px;font-weight:750;color:#547185;background:#f8fbfd}.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}.kpi .card{padding:15px}.kpi strong{display:block;font-size:21px}.kpi span{font-size:11px;color:#8293a2}.message{padding:12px 14px;background:#ecf7f1;border:1px solid #c9e5d2;color:#2c7352;border-radius:7px;font-size:12px;margin:0 0 16px}.error{padding:12px 14px;background:#fff1ed;border:1px solid #f0c5b7;color:#9a3a24;border-radius:7px;font-size:12px;margin:0 0 16px}.queue-card{border:1px solid #dae5ec;border-radius:10px;padding:16px;margin-bottom:14px}.queue-top{display:flex;align-items:center;justify-content:space-between;gap:14px}.queue-card h3{margin:7px 0 6px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.empty{padding:40px 24px;text-align:center;border:1px dashed #cad8e2;border-radius:9px;color:#718596;font-size:13px;line-height:1.6}.unitcard{display:flex;justify-content:space-between;gap:14px;padding:14px;border:1px solid #dfe8ed;border-radius:9px;margin-bottom:10px}.tagline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.divider{height:1px;background:#e7edf2;margin:14px 0}.hide{display:none!important}.inline{display:flex;gap:10px;align-items:center}.backlink{color:#276f9c;border:0;background:none;padding:0;font-size:12px;font-weight:750}.badge-outline{background:#f0f5f8;border:1px solid #d7e4ec;border-radius:16px;color:#46647b;padding:5px 10px;font-size:11px}.subtitle strong{color:#344a5c}@media(max-width:1030px){.app{grid-template-columns:65px 1fr}.brand{font-size:19px;padding-left:0}.brand span{display:none}.nav-btn{font-size:0}.nav-btn:before{content:attr(data-icon);font-size:18px}.side-label,.aside-note{display:none}.sidebar{padding:18px 8px}.content{padding:25px 20px}.topbar{padding:0 20px}}@media(max-width:730px){.grid2,.grid3,.two-col,.seg,.kpi{grid-template-columns:1fr}.steps{flex-wrap:wrap}.step{min-width:46%;font-size:11px}.content{padding:22px 13px}.topbar{height:58px;padding:0 13px}.card{padding:16px}.card-head{display:block}.timeline{padding-left:16px}.timeline-header{align-items:flex-start}.pilot{font-size:9px}.actions{flex-direction:column-reverse;align-items:stretch}.right{width:100%}.right .btn{flex:1}.event time{width:66px;flex-basis:66px}}
+
+/* READABILITY PASS v0.2 — deliberate light operational theme, not OS-dependent. */
+:root {
+  color-scheme: light;
+  --ink: #162b3e;
+  --muted: #4d6072;
+  --border: #c8d5df;
+  --navy: #142b40;
+  --blue: #0d5a8a;
+  --soft: #e7f2fa;
+  --green: #165e4b;
+  --warn: #83510e;
+  color: var(--ink);
+  background: #eff3f7;
+  font-size: 14px;
+}
+html,body { background: #eff3f7; }
+body { color: var(--ink); line-height: 1.5; }
+button,input,select,textarea { font: inherit; color: var(--ink); }
+button { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #0b72ab !important; outline-offset: 3px; }
+a, .backlink { color: #064e7a; }
+::selection { background: #b4dced; color: #10283c; }
+.sidebar { background: var(--navy); color: #f1f6fa; }
+.brand { color: #ffffff; }
+.brand span { color: #a4ddfa; }
+.side-label { color: #bfcedb; opacity: 1; font-size: 11px; letter-spacing: 1.1px; }
+.nav-btn { color: #e5eef5; font-size: 14px; }
+.nav-btn:hover, .nav-btn.active { color: #ffffff; background: #31536c; }
+.nav-btn.active { box-shadow: inset 3px 0 0 #9fdbff; }
+.aside-note { color: #e0eaf0; border-color: #47667f; font-size: 12px; }
+.topbar { border-color: var(--border); }
+.crumb { color: #405a6d; font-size: 13px; }
+.topbar b { color: #172f43; }
+.pilot { background: #fff2d5; color: #70430c; border-color: #d7a857; font-size: 11px; }
+.eyebrow { color: #275877; font-size: 12px; }
+h1,h2,h3 { color: #152a3d; }
+h1 { font-size: 29px; }
+h2 { font-size: 21px; }
+h3 { font-size: 16px; }
+.subtitle { color: #405468; font-size: 14px; }
+.subtitle strong { color: #1c364d; }
+.card { border-color: var(--border); box-shadow: 0 2px 12px rgb(27 53 72 / 5%); }
+.muted { color: var(--muted); font-size: 13px; }
+.small { font-size: 12px; }
+.step { color: #4b6070; border-color: #c1cfdb; font-size: 13px; }
+.step span { background: #dfe8ef; color: #2a475d; font-weight: 800; }
+.step.active { color: #095b8d; border-color: #0d6398; }
+.step.active span { color: #084f7b; background: #d5eaf8; }
+.step.done { color: #186348; border-color: #288364; }
+.step.done span { color: #15533c; background: #d8f0e6; }
+.field label { color: #22374a; font-size: 13px; }
+.field input,.field select,.field textarea { color: #132c41; background: #fff; border: 1.5px solid #98afc0; border-radius: 7px; font-size: 14px; min-height: 44px; }
+.field input::placeholder,.field textarea::placeholder { color: #566d7d; opacity: 1; }
+.field input:hover,.field select:hover,.field textarea:hover { border-color: #557f9b; }
+.field input:focus,.field select:focus,.field textarea:focus { border-color: #0d6499; box-shadow: 0 0 0 3px #0d649921; outline: none; }
+.hint { color: #53687b; font-size: 12px; }
+.seg button { color: #172c3c; background: #fff; border: 1.5px solid #b3c7d5; }
+.seg button:hover { background: #f4f9fc; border-color: #5d90af; }
+.seg button.selected { color: #0f344c; background: #e1f1fa; border-color: #0d6398; box-shadow: inset 0 0 0 1px #0d6398; }
+.seg strong { color: inherit; font-size: 14px; }
+.seg span { color: #405c71; font-size: 12px; }
+.btn { color: #173c55; background: #fff; border: 1.5px solid #94b0c3; padding: 11px 16px; font-size: 13px; }
+.btn:hover:not(:disabled) { background: #f1f7fb; border-color: #487d9d; }
+.btn.primary { background: #0c5f91; color: #fff; border-color: #0c5f91; }
+.btn.primary:hover:not(:disabled) { background: #094b75; border-color: #094b75; }
+.btn.secondary { background: #e6f2fa; color: #0d4c75; border-color: #9ac1d8; }
+.btn.secondary:hover:not(:disabled) { background: #d8ebf7; border-color: #5b91b0; }
+.btn.danger { color: #82390c; border-color: #b88c71; }
+.btn.danger:hover:not(:disabled) { background: #fff1e7; }
+button:disabled,.btn:disabled { color: #536b7b; background: #e6ebef; border-color: #bdc9d1; opacity: 1; cursor: not-allowed; }
+.callout { border-color: #0d6799; background: #e9f4fb; color: #19374b; font-size: 13px; }
+.callout strong { color: #0c547e; }
+.callout.warning { background: #fff4dc; color: #5f3b10; border-color: #ad700e; }
+.flag { background: #e0f2e7; color: #16583d; font-size: 11px; }
+.flag.pending { background: #fff2d1; color: #6d440c; }
+.flag.blue { background: #e0f0fa; color: #115a88; }
+.stat { background: #f5f8fa; border-color: #cddce5; }
+.stat span { color: #4c6174; font-size: 12px; }
+.stat strong { color: #1b3549; font-size: 15px; }
+.ro-row,.list li { border-color: #dbe5eb; font-size: 13px; }
+.line { background: #f2f7fa; color: #1e3546; border-color: #94b9ce; font-size: 13px; }
+.timeline { border-color: #b3cddf; }
+.timeline-card,.queue-card,.unitcard { border-color: #c8d9e4; }
+.timeline-title { font-size: 14px; color: #192f42; }
+.event { border-color: #dbe5ec; font-size: 13px; }
+.event time { color: #405e72; font-variant-numeric: tabular-nums; }
+.event .muted { font-size: 12px; }
+.pill { color: #315a72; background: #f2f8fb; border-color: #b8cfdd; font-size: 11px; }
+.kpi span { color: #486377; font-size: 12px; }
+.message { background: #e0f3e8; border-color: #a4d0b7; color: #15583d; font-size: 13px; }
+.error { background: #fff0e9; border-color: #dcac9a; color: #872e1c; font-size: 13px; }
+.empty { border-color: #a9c2d2; color: #4e6677; font-size: 14px; }
+.badge-outline { color: #36596e; background: #f3f8fb; border-color: #b9d2e0; font-size: 12px; }
+@media (max-width: 1030px) {
+  .sidebar .nav-btn { font-size: 0; }
+  .sidebar .nav-btn::before { font-size: 21px; }
+}
+@media (max-width: 730px) {
+  h1 { font-size: 25px; }
+  h2 { font-size: 19px; }
+  .step { font-size: 12px; }
+  .timeline-header { flex-wrap: wrap; }
+  .timeline-header .btn { min-height: 40px; }
+  .event { gap: 8px; }
+  .event time { width: 70px; flex-basis: 70px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+
+
+/* SHARED DESIGN SYSTEM — component rules consume semantic tokens, never screen-specific palettes. */
+html,body{color:var(--os-ink);background:var(--os-canvas)}
+:focus-visible{outline-color:var(--os-focus)!important}
+.sidebar{background:var(--os-sidebar);color:var(--os-sidebar-text)}
+.brand span{color:var(--os-sidebar-highlight)}
+.nav-btn{color:var(--os-sidebar-text)}
+.nav-btn:hover,.nav-btn.active{background:var(--os-nav-active);color:#fff}
+.nav-btn.active{box-shadow:inset 3px 0 0 var(--os-sidebar-highlight)}
+.main,.content{background:var(--os-canvas)}
+.topbar,.card,.seg button,.timeline-card,.queue-card,.unitcard{background:var(--os-surface)}
+.topbar,.card,.timeline-card,.queue-card,.unitcard{border-color:var(--os-line)}
+.crumb,.subtitle,.muted,.hint,.event time,.setting-row .muted{color:var(--os-muted)}
+.crumb b,.topbar b,h1,h2,h3,.timeline-title,.field label,.setting-row strong{color:var(--os-ink)}
+.eyebrow{color:var(--os-accent-dark)}
+.step{border-color:var(--os-line);color:var(--os-muted)}
+.step.active{color:var(--os-accent-dark);border-color:var(--os-accent)}
+.step.active span{background:var(--os-accent-soft);color:var(--os-accent-dark)}
+.seg button{border-color:var(--os-line);color:var(--os-ink)}
+.seg button.selected,.theme-card.selected{background:var(--os-accent-soft);border-color:var(--os-accent);box-shadow:inset 0 0 0 1px var(--os-accent)}
+.seg button:hover{border-color:var(--os-accent)}
+.seg span{color:var(--os-muted)}
+.field input,.field select,.field textarea,.setting-row select,.lookup-controls input{color:var(--os-ink);border-color:var(--os-input-line);background:var(--os-surface)}
+.field input:hover,.field select:hover,.field textarea:hover,.setting-row select:hover,.lookup-controls input:hover{border-color:var(--os-accent)}
+.field input:focus,.field select:focus,.field textarea:focus,.setting-row select:focus,.lookup-controls input:focus{border-color:var(--os-accent);box-shadow:0 0 0 3px var(--os-focus-wash)}
+.btn{background:var(--os-surface);border-color:var(--os-input-line);color:var(--os-accent-dark)}
+.btn:hover:not(:disabled){background:var(--os-accent-soft);border-color:var(--os-accent)}
+.btn.primary{background:var(--os-accent);color:#fff;border-color:var(--os-accent)}
+.btn.primary:hover:not(:disabled){background:var(--os-accent-hover);border-color:var(--os-accent-hover)}
+.btn.secondary{background:var(--os-accent-soft);color:var(--os-accent-dark);border-color:var(--os-accent-line)}
+.btn.secondary:hover:not(:disabled){background:var(--os-accent-soft);border-color:var(--os-accent)}
+.callout{background:var(--os-accent-soft);border-color:var(--os-accent);color:var(--os-ink)}
+.callout strong,.backlink{color:var(--os-accent-dark)}
+.timeline{border-color:var(--os-accent-line)}
+.timeline-card:before{background:var(--os-accent);box-shadow:0 0 0 2px var(--os-accent-line)}
+.timeline-card.future:before{background:#be7b17;box-shadow:0 0 0 2px #e9cf9d}
+.pill,.badge-outline{background:var(--os-accent-soft);color:var(--os-accent-dark);border-color:var(--os-accent-line)}
+.stat,.line{background:var(--os-surface-muted);color:var(--os-ink);border-color:var(--os-line)}
+.settings-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.settings-group{padding:9px 0 12px;border-top:1px solid var(--os-line)}
+.settings-group h3{margin:15px 0 5px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--os-line);padding:12px 0}
+.setting-row .muted{margin:3px 0 0;max-width:590px;font-size:12px}
+.setting-row strong{font-size:13px}
+.setting-row select{border:1.5px solid var(--os-input-line);border-radius:7px;min-width:150px;min-height:42px;padding:8px 10px;font-size:13px}
+.required-mark{color:#9d3b28;font-weight:900;margin-left:3px}
+.optional-mark{font-size:11px;color:var(--os-muted);font-weight:500;margin-left:5px}
+.theme-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.theme-card{border:1.5px solid var(--os-line);border-radius:10px;padding:17px;background:var(--os-surface);color:var(--os-ink);text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-height:166px}
+.theme-card strong{font-size:14px}
+.theme-card small{font-size:12px;color:var(--os-muted)}
+.theme-selected{font-size:12px;font-weight:800;color:var(--os-accent-dark);margin-top:auto}
+.theme-swatch{width:45px;height:22px;border-radius:5px;border:1px solid #8495a3}
+.lookup-panel{background:var(--os-surface-muted);border:1px solid var(--os-line);border-radius:9px;padding:14px;margin:10px 0 20px}
+.lookup-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;font-size:14px}
+.lookup-controls{display:flex;gap:8px;margin-bottom:12px}
+.lookup-controls input{flex:1;min-width:0;border:1.5px solid var(--os-input-line);border-radius:7px;padding:9px 11px;min-height:44px}
+.lookup-results{display:grid;gap:8px}
+.lookup-result{background:var(--os-surface);border:1px solid var(--os-line);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-radius:7px}
+.lookup-result .muted{font-size:12px}
+@media(max-width:730px){.setting-row{align-items:stretch;flex-direction:column;gap:8px}.setting-row select{width:100%}.theme-grid{grid-template-columns:1fr}.lookup-controls{flex-wrap:wrap}.lookup-controls input{flex-basis:100%}.lookup-result{align-items:flex-start;flex-direction:column}.lookup-result .btn{width:100%}.lookup-title{align-items:flex-start;flex-direction:column}}
+/* Shared role-display configuration (enterprise-dense, responsive). */
+.identifier-config-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+.identifier-live-preview{border:1px solid var(--border);background:var(--soft);padding:16px;border-radius:8px;min-height:165px}
+.identifier-values{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:10px 0}
+.identifier-chip{display:flex;flex-direction:column;gap:3px;min-width:128px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;max-width:100%}
+.identifier-chip small{font-size:11px;line-height:1.35;color:var(--muted);font-weight:700}
+.identifier-chip strong{font-size:15px;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
+.identifier-all-roles{border-top:1px solid var(--border);margin-top:15px;padding-top:11px}
+.identifier-all-roles summary{font-weight:700;color:var(--blue);cursor:pointer;font-size:13px}
+.identifier-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;margin-top:8px}
+.identifier-summary{display:flex;gap:10px;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.identifier-summary b{font-weight:700;color:var(--ink)}
+.identifier-summary span{color:var(--muted);text-align:right}
+.identifier-inline{font-weight:750;color:var(--ink);font-size:14px;margin-top:6px;overflow-wrap:anywhere}
+@media(max-width:800px){.identifier-config-grid{grid-template-columns:1fr}.identifier-summary-grid{grid-template-columns:1fr}.identifier-config-grid .grid2{grid-template-columns:1fr}}
+
+/* Users, Roles & Permissions — shared OneShop enterprise design tokens */
+*{box-sizing:border-box}
+body{margin:0;background:var(--os-canvas);color:var(--os-ink);font:13px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.48;cursor:not-allowed}
+[hidden]{display:none!important}
+.admin-shell{display:grid;grid-template-columns:224px minmax(0,1fr);min-height:100vh}
+.admin-sidebar{background:var(--os-sidebar);color:var(--os-sidebar-text);padding:20px 13px;min-height:100vh}
+.admin-sidebar .brand{font-size:22px;font-weight:900;letter-spacing:-1px;color:white;padding:5px 10px 20px}
+.admin-sidebar .brand span{color:#8cc4e8}
+.admin-sidebar .side-label{margin:17px 12px 7px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:800;opacity:.65}
+.admin-nav{border:0;width:100%;border-radius:7px;padding:10px 12px;background:transparent;text-align:left;font-size:12px;font-weight:650;color:var(--os-sidebar-text);display:flex;align-items:center;gap:9px}
+.admin-nav span{font-size:17px;width:20px;text-align:center;line-height:1}
+.admin-nav:hover{background:rgba(255,255,255,.09)}
+.admin-nav.active{background:var(--os-nav-active);color:#fff}
+.sidebar-placeholder{padding:8px 14px;font-size:12px;opacity:.68}
+.side-note{margin:32px 12px 0;font-size:11px;line-height:1.5;opacity:.7;border-top:1px solid rgba(255,255,255,.15);padding-top:14px}
+.admin-main{min-width:0}
+.admin-topbar{position:sticky;top:0;z-index:30;height:66px;border-bottom:1px solid var(--os-line);background:#fff;display:flex;align-items:center;gap:20px;padding:0 26px}
+.breadcrumb{font-size:12px;white-space:nowrap;color:var(--os-muted)}
+.breadcrumb b{color:var(--os-ink)}
+.global-input{flex:1;display:flex;align-items:center;gap:9px;min-width:150px;max-width:640px;border:1px solid var(--os-input-line);border-radius:8px;height:38px;padding:0 10px;background:white}
+.global-input:focus-within{border-color:var(--os-focus);box-shadow:0 0 0 3px var(--os-focus-wash)}
+.global-input svg{width:17px;height:17px;fill:none;stroke:var(--os-muted);stroke-width:2;stroke-linecap:round}
+.global-input input{border:0;outline:0;min-width:0;width:100%;background:transparent;box-shadow:none!important;font-size:12px}
+kbd{background:var(--os-surface-muted);border:1px solid var(--os-line);border-radius:4px;padding:2px 5px;font-size:10px;white-space:nowrap}
+.admin-top-actions{display:flex;align-items:center;gap:10px}
+.demo-chip{border:1px solid #c5d7e7;background:#edf5fb;color:#225678;border-radius:5px;padding:6px 8px;font-size:10px;font-weight:800;letter-spacing:.6px;white-space:nowrap}
+.primary-top-add,.ui-button.primary{border:1px solid var(--os-accent);background:var(--os-accent);color:#fff;font-weight:750}
+.primary-top-add{border-radius:6px;padding:8px 15px}
+.viewer-label{display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:10px;color:var(--os-muted)}
+.viewer-label select{width:118px;max-width:125px;font-size:11px;padding:7px 22px 7px 7px;border:1px solid var(--os-line);border-radius:6px;background:#fff;color:var(--os-ink)}
+.admin-content{max-width:1520px;margin:0 auto;padding:28px 32px 70px}
+.page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:0 0 18px}
+.overline{margin:0 0 5px;text-transform:uppercase;letter-spacing:1.5px;color:var(--os-accent);font-size:10px;font-weight:850}
+.page-heading h1{margin:0;font-size:27px;font-weight:850;letter-spacing:-.8px;line-height:1.22}
+.muted{color:var(--os-muted)}
+.page-heading p:not(.overline){margin:6px 0 0;max-width:720px;color:var(--os-muted);font-size:12px}
+.heading-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.ui-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--os-surface);border:1px solid var(--os-line);border-radius:6px;color:var(--os-ink);font-weight:700;font-size:12px;padding:8px 12px;white-space:nowrap}
+.ui-button:hover:not(:disabled){border-color:var(--os-accent);background:var(--os-accent-soft)}
+.ui-button.primary:hover:not(:disabled){background:var(--os-accent-dark);color:white}
+.ui-button.danger{color:#a12c28;border-color:#e0bab6;background:#fff}
+.admin-card{border:1px solid var(--os-line);border-radius:9px;background:var(--os-surface);box-shadow:0 2px 8px rgba(17,38,59,.025)}
+.card-top{padding:15px 17px;border-bottom:1px solid var(--os-line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-top h2,.card-top h3{margin:0;font-size:14px;font-weight:850}
+.card-body{padding:17px}
+.summary-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.metric{padding:15px 17px}
+.metric label{display:block;font-size:11px;font-weight:650;color:var(--os-muted)}
+.metric strong{display:block;font-size:24px;letter-spacing:-.6px;margin-top:3px}
+.metric small{font-size:10px;color:var(--os-muted)}
+.two-panel{display:grid;grid-template-columns:minmax(270px,360px) minmax(0,1fr);gap:14px;align-items:start}
+.employee-list{padding:7px;max-height:680px;overflow-y:auto}
+.employee-row{display:flex;gap:10px;align-items:center;width:100%;padding:10px;border:1px solid transparent;background:transparent;border-radius:7px;text-align:left;color:var(--os-ink)}
+.employee-row:hover,.employee-row.active{background:var(--os-accent-soft);border-color:var(--os-accent-line)}
+.avatar{width:37px;height:37px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:9px;background:#dbeaf4;color:var(--os-accent-dark);font-weight:850;font-size:12px}
+.employee-details{flex:1;min-width:0}
+.employee-details strong,.employee-details span{display:block}
+.employee-details strong{font-weight:800;font-size:12px}
+.employee-details span{font-size:11px;color:var(--os-muted);margin-top:3px;overflow-wrap:anywhere}
+.status{border-radius:30px;padding:3px 7px;display:inline-block;font-size:10px;font-weight:800}
+.status.active{background:#e0f2e9;color:#25664a}
+.status.invited{background:#fff3d8;color:#8a5c10}
+.status.inactive{background:#f1e5e5;color:#913f3d}
+.profile-header{padding:18px;display:flex;align-items:center;gap:11px}
+.profile-header .avatar{width:47px;height:47px;font-size:15px}
+.profile-header h2{font-size:17px;margin:0}
+.profile-header p{margin:3px 0 0;color:var(--os-muted);font-size:11px}
+.profile-actions{margin-left:auto;display:flex;gap:7px;align-items:center}
+.tabbar{display:flex;overflow-x:auto;gap:1px;border-top:1px solid var(--os-line);border-bottom:1px solid var(--os-line);padding:0 10px}
+.tabbar button{border:0;border-bottom:2px solid transparent;background:transparent;padding:12px 14px;font-size:11px;font-weight:750;color:var(--os-muted);white-space:nowrap}
+.tabbar button.active{border-bottom-color:var(--os-accent);color:var(--os-accent)}
+.profile-body{padding:20px}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 17px}
+.field{min-width:0}
+.field label{display:block;font-size:10px;font-weight:750;color:var(--os-muted);margin:0 0 5px}
+.field input,.field select,.field textarea{width:100%;min-height:36px;padding:8px 10px;border:1px solid var(--os-input-line);border-radius:6px;color:var(--os-ink);background:white}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--os-focus-wash);border-color:var(--os-focus)}
+.field input[disabled],.field select[disabled]{background:var(--os-surface-muted);color:var(--os-muted);border-color:var(--os-line)}
+.field.wide{grid-column:1/-1}
+.field-hint{font-size:11px;color:var(--os-muted);line-height:1.55;margin:8px 0 14px}
+.field-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.inline-callout{padding:11px 12px;border:1px solid var(--os-line);border-radius:7px;background:var(--os-surface-muted);font-size:11px;color:var(--os-muted);line-height:1.55}
+.inline-callout strong{color:var(--os-ink)}
+.small-divider{border:0;border-top:1px solid var(--os-line);margin:16px 0}
+.permission-intro{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.role-chip{border:1px solid var(--os-accent-line);background:var(--os-accent-soft);color:var(--os-accent-dark);padding:3px 8px;border-radius:5px;font-size:10px;font-weight:800}
+.perm-group{border:1px solid var(--os-line);border-radius:7px;margin-top:8px;overflow:hidden}
+.perm-group summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--os-surface-muted);padding:10px 12px;font-weight:800;font-size:11px;cursor:pointer}
+.perm-group summary::-webkit-details-marker{display:none}
+.perm-group summary:after{content:'⌄';font-size:16px;color:var(--os-muted)}
+.perm-group[open] summary:after{content:'⌃'}
+.permission-row{display:grid;grid-template-columns:minmax(0,1fr) 100px 130px;gap:12px;align-items:center;padding:10px 12px;border-top:1px solid var(--os-line)}
+.permission-row>div strong{display:block;font-size:11px}
+.permission-row>div small{display:block;color:var(--os-muted);font-size:10px;margin-top:3px}
+.permission-row .effective{font-size:10px;font-weight:750}
+.permission-row .effective.yes{color:#26724e}
+.permission-row .effective.no{color:#87504a}
+.permission-row select{font-size:10px;border:1px solid var(--os-input-line);border-radius:5px;background:white;padding:6px;max-width:130px}
+.role-list{padding:8px}
+.role-item{display:flex;width:100%;justify-content:space-between;gap:12px;align-items:center;padding:11px;border:1px solid transparent;background:transparent;text-align:left;border-radius:6px}
+.role-item.active,.role-item:hover{background:var(--os-accent-soft);border-color:var(--os-accent-line)}
+.role-item strong,.role-item small{display:block}
+.role-item strong{font-size:12px;color:var(--os-ink)}
+.role-item small{font-size:10px;color:var(--os-muted);margin-top:3px}
+.role-panel{padding:17px}
+.role-panel h2{margin:0;font-size:17px}
+.inline-switch{position:relative;appearance:none;width:38px;height:21px;background:#abb9c5;border-radius:20px;cursor:pointer;vertical-align:middle;transition:background .16s}
+.inline-switch:checked{background:var(--os-accent)}
+.inline-switch:before{content:'';position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:100%;background:#fff;transition:transform .16s}
+.inline-switch:checked:before{transform:translateX(17px)}
+.module-section-title{font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin:25px 0 9px}
+.module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.module-card{display:flex;justify-content:space-between;gap:13px;padding:15px;border:1px solid var(--os-line);border-radius:8px;background:#fff;align-items:center}
+.module-card strong{font-size:12px}
+.module-card p{font-size:10px;color:var(--os-muted);margin:5px 0 0}
+.module-card.disabled{background:var(--os-surface-muted)}
+.audit-row{display:grid;grid-template-columns:160px minmax(0,1fr) 130px;gap:12px;padding:13px 17px;border-top:1px solid var(--os-line);font-size:11px}
+.audit-row time{color:var(--os-muted);font-size:10px}
+.global-results{position:fixed;top:59px;z-index:60;left:48%;transform:translateX(-50%);width:min(630px,calc(100vw - 24px));background:white;border:1px solid var(--os-line);border-radius:0 0 9px 9px;box-shadow:0 20px 35px #0b26352c;padding:9px}
+.global-results button{display:block;width:100%;border:0;text-align:left;padding:10px 11px;background:white;border-radius:6px;color:var(--os-ink)}
+.global-results button:hover{background:var(--os-accent-soft)}
+.global-add-menu{position:fixed;z-index:80;top:57px;right:140px;background:white;border:1px solid var(--os-line);border-radius:7px;box-shadow:0 12px 24px #0b263526;padding:6px;min-width:170px}
+.global-add-menu button{display:block;border:0;background:transparent;text-align:left;width:100%;padding:10px 12px;font-size:12px;border-radius:5px}
+.global-add-menu button:hover{background:var(--os-accent-soft)}
+.dialog-backdrop{position:fixed;inset:0;background:rgba(6,23,40,.48);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
+.admin-dialog{background:#fff;border-radius:11px;width:min(570px,100%);max-height:94vh;overflow-y:auto;box-shadow:0 28px 70px rgba(0,0,0,.28)}
+.dialog-heading{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--os-line)}
+.dialog-heading h2{margin:0;font-size:19px}
+.icon-button{font-size:24px;background:transparent;border:0;color:var(--os-muted)}
+.dialog-body{padding:19px 20px}
+.dialog-actions{border-top:1px solid var(--os-line);padding:12px 20px;display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;bottom:18px;right:20px;z-index:120;background:var(--os-sidebar);color:white;border-radius:6px;padding:12px 16px;font-size:12px;font-weight:700;box-shadow:0 8px 28px #102a3b3b;max-width:400px}
+.blocked-state{padding:40px 26px;text-align:center}
+.blocked-state h2{font-size:18px;margin:0 0 7px}
+.blocked-state p{color:var(--os-muted);max-width:500px;margin:0 auto}
+@media(max-width:1250px){.breadcrumb{display:none}.admin-topbar{gap:12px;padding:0 15px}.demo-chip{display:none}.admin-content{padding:22px 20px}.two-panel{grid-template-columns:minmax(235px,300px) minmax(0,1fr)}}
+@media(max-width:950px){.admin-shell{grid-template-columns:190px minmax(0,1fr)}.admin-sidebar{padding:14px 8px}.admin-topbar{flex-wrap:wrap;height:auto;min-height:67px;padding:10px}.viewer-label span{display:none}.two-panel{grid-template-columns:1fr}.employee-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}.summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.role-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.admin-shell{display:block}.admin-sidebar{min-height:auto;padding:9px 12px;display:flex;gap:5px;align-items:center;overflow-x:auto}.admin-sidebar .brand{padding:3px 7px;font-size:16px;white-space:nowrap}.admin-sidebar .side-label,.sidebar-placeholder,.side-note{display:none}.admin-nav{width:auto;white-space:nowrap;padding:7px 10px;font-size:10px}.admin-nav span{display:none}.admin-topbar{top:0;min-height:60px;gap:7px}.global-input{min-width:0;order:1;flex:1 1 60%;height:36px}.global-input kbd{display:none}.admin-top-actions{gap:6px}.primary-top-add{padding:8px 9px}.viewer-label select{max-width:80px;width:80px}.admin-content{padding:18px 12px 50px}.page-heading h1{font-size:22px}.page-heading{align-items:flex-start;flex-direction:column;gap:9px}.summary-strip{gap:7px}.metric{padding:12px}.metric strong{font-size:19px}.employee-list,.role-list{grid-template-columns:1fr}.profile-header{padding:12px}.profile-actions{flex-direction:column;align-items:flex-end}.profile-body{padding:13px}.field-grid{grid-template-columns:1fr}.permission-row{grid-template-columns:minmax(0,1fr) 75px 107px;gap:7px;padding:9px 7px}.permission-row select{font-size:10px;max-width:107px}.module-grid{grid-template-columns:1fr}.audit-row{grid-template-columns:1fr;gap:4px}.global-results{top:60px;left:50%}.global-add-menu{right:8px;top:58px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="admin-shell">
+ <aside class="admin-sidebar">
+  <div class="brand">ONE<span>SHOP</span></div>
+  <div class="side-label">Dealership</div>
+  <button class="admin-nav" data-page="users" type="button"><span>▤</span> Users</button>
+  <button class="admin-nav" data-page="roles" type="button"><span>♧</span> Roles &amp; Permissions</button>
+  <button class="admin-nav" data-page="positions" type="button"><span>◇</span> Positions</button>
+  <button class="admin-nav" data-page="modules" type="button"><span>▦</span> Modules</button>
+  <button class="admin-nav" data-page="audit" type="button"><span>☷</span> Audit History</button>
+  <div class="side-label">Core operations</div>
+  <div class="sidebar-placeholder">Schedule &amp; Check-In</div>
+  <div class="sidebar-placeholder">Inspections</div>
+  <div class="sidebar-placeholder">Unit Management</div>
+  <div class="sidebar-placeholder">Repair Orders</div>
+  <div class="sidebar-placeholder">Follow-Ups</div>
+  <div class="sidebar-placeholder">Financials</div>
+  <p class="side-note">Offline design review. Changes affect fictional data in this page, not Supabase.</p>
+ </aside>
+ <div class="admin-main">
+  <header class="admin-topbar">
+   <div class="breadcrumb">OneShop <b>/ Administration</b></div>
+   <label class="global-input">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+    <input id="global-query" type="search" placeholder="Search OneShop..." aria-label="Search OneShop employee records" autocomplete="off">
+    <kbd>Ctrl K</kbd>
+   </label>
+   <div class="admin-top-actions">
+    <span class="demo-chip">OFFLINE REVIEW</span>
+    <button class="primary-top-add" id="top-add" type="button">+ Add</button>
+    <label class="viewer-label"><span>Viewing as</span><select id="viewer-select" aria-label="Review as employee"></select></label>
+   </div>
+  </header>
+  <div class="global-results" id="global-results" hidden aria-label="Search results" aria-live="polite"></div>
+  <main id="admin-content" class="admin-content" tabindex="-1"></main>
+ </div>
+</div>
+<div id="dialog-backdrop" class="dialog-backdrop" hidden>
+ <section class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <header class="dialog-heading"><div><p class="overline" id="dialog-kicker">Administration</p><h2 id="dialog-title">Create</h2></div><button type="button" class="icon-button" id="dialog-close" aria-label="Close dialog">×</button></header>
+  <div id="dialog-body" class="dialog-body"></div>
+  <footer class="dialog-actions"><button id="dialog-cancel" type="button" class="ui-button">Cancel</button><button id="dialog-save" type="button" class="ui-button primary">Save</button></footer>
+ </section>
+</div>
+<div id="add-menu" class="global-add-menu" hidden>
+ <button type="button" data-add-type="user">Invite employee</button>
+ <button type="button" data-add-type="role">Create role</button>
+ <button type="button" data-add-type="position">Create position</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+(function(){
+'use strict';
+/**
+ * OneShop cross-platform permissions contract (pure functions).
+ * The DB must enforce these decisions independently: no frontend permission
+ * checker is an authorization boundary.
+ */
+const MODULES = Object.freeze({
+  schedule_checkin:{label:'Schedule & Check-In',tier:'basic',defaultEnabled:true},
+  inspections:{label:'Inspections',tier:'basic',defaultEnabled:true},
+  unit_management:{label:'Unit Management',tier:'basic',defaultEnabled:true},
+  ro_management:{label:'Repair Orders',tier:'basic',defaultEnabled:true},
+  followups:{label:'Follow-Ups',tier:'basic',defaultEnabled:true},
+  financials:{label:'Financials',tier:'basic',defaultEnabled:true},
+  customers:{label:'Customers',tier:'basic',defaultEnabled:true},
+  reporting:{label:'Reporting',tier:'basic',defaultEnabled:true},
+  mobile_operations:{label:'Mobile Operations',tier:'advanced',defaultEnabled:false},
+  insurance_warranty:{label:'Insurance & Warranty',tier:'advanced',defaultEnabled:false},
+  marketing_automation:{label:'Marketing Automation',tier:'advanced',defaultEnabled:false},
+  advanced_analytics:{label:'Advanced Analytics',tier:'advanced',defaultEnabled:false},
+  integrations:{label:'Integrations & API',tier:'advanced',defaultEnabled:false},
+});
+const PERMISSIONS = Object.freeze({
+  'users.read':{module:null,label:'View employee directory'},
+  'users.create':{module:null,label:'Invite employees'},
+  'users.update':{module:null,label:'Edit employee profiles'},
+  'users.deactivate':{module:null,label:'Deactivate accounts'},
+  'roles.read':{module:null,label:'View role templates'},
+  'roles.manage':{module:null,label:'Create and edit role templates'},
+  'positions.manage':{module:null,label:'Manage job positions'},
+  'permissions.assign':{module:null,label:'Assign roles and overrides'},
+  'modules.manage':{module:null,label:'Enable and configure modules'},
+  'audit.read':{module:null,label:'View security audit history'},
+  'payroll.read':{module:'financials',label:'View payroll data',sensitive:true},
+  'payroll.manage':{module:'financials',label:'Edit pay and employment costs',sensitive:true},
+  'finance.read':{module:'financials',label:'View financial information',sensitive:true},
+  'finance.manage':{module:'financials',label:'Manage financial records',sensitive:true},
+  'schedule.read':{module:'schedule_checkin',label:'View schedule'},
+  'schedule.manage':{module:'schedule_checkin',label:'Edit schedule'},
+  'checkin.create':{module:'schedule_checkin',label:'Perform check-in'},
+  'inspection.read':{module:'inspections',label:'View inspections'},
+  'inspection.create':{module:'inspections',label:'Create inspections'},
+  'inspection.update':{module:'inspections',label:'Edit inspections'},
+  'unit.read':{module:'unit_management',label:'View units'},
+  'unit.create':{module:'unit_management',label:'Register units'},
+  'unit.update':{module:'unit_management',label:'Edit unit records'},
+  'unit.move.request':{module:'unit_management',label:'Request moves'},
+  'unit.move.claim':{module:'unit_management',label:'Claim moves'},
+  'unit.move.deliver':{module:'unit_management',label:'Confirm delivery'},
+  'unit.location.read':{module:'unit_management',label:'View unit locations'},
+  'ro.read':{module:'ro_management',label:'View repair orders'},
+  'ro.create':{module:'ro_management',label:'Create repair orders'},
+  'ro.update':{module:'ro_management',label:'Edit repair orders'},
+  'ro.assign':{module:'ro_management',label:'Assign RO work'},
+  'ro.number.override':{module:'ro_management',label:'Override assigned RO number'},
+  'followup.read':{module:'followups',label:'View follow-ups'},
+  'followup.manage':{module:'followups',label:'Manage follow-ups'},
+  'customer.read':{module:'customers',label:'View customers'},
+  'customer.contact.read':{module:'customers',label:'View customer contact details',sensitive:true},
+  'customer.manage':{module:'customers',label:'Edit customers'},
+  'reports.read':{module:'reporting',label:'View reports'},
+  'mobile.use':{module:'mobile_operations',label:'Use mobile operations'},
+  'warranty.read':{module:'insurance_warranty',label:'View warranty and insurance'},
+  'warranty.manage':{module:'insurance_warranty',label:'Manage claims'},
+  'marketing.manage':{module:'marketing_automation',label:'Manage campaigns'},
+  'analytics.advanced.read':{module:'advanced_analytics',label:'View advanced analytics'},
+  'integrations.manage':{module:'integrations',label:'Manage integrations'},
+});
+const keys = (...items)=>items;
+const ROLE_TEMPLATES = Object.freeze({
+  administrator:{label:'Administrator',permissions:keys(
+    'users.read','users.create','users.update','users.deactivate','roles.read','roles.manage',
+    'positions.manage','permissions.assign','modules.manage','audit.read',
+    'schedule.read','schedule.manage','checkin.create','inspection.read','inspection.create','inspection.update',
+    'unit.read','unit.create','unit.update','unit.move.request','unit.move.claim','unit.move.deliver','unit.location.read',
+    'ro.read','ro.create','ro.update','ro.assign','ro.number.override',
+    'followup.read','followup.manage','customer.read','customer.contact.read','customer.manage','reports.read',
+    'finance.read','finance.manage')},
+  service_writer:{label:'Service Writer',permissions:keys('schedule.read','schedule.manage','checkin.create','unit.read','unit.create','unit.update','unit.move.request','unit.location.read','ro.read','ro.create','ro.update','ro.number.override','inspection.read','customer.read','customer.contact.read','customer.manage','followup.read','followup.manage')},
+  porter:{label:'Porter',permissions:keys('schedule.read','unit.read','unit.create','unit.move.claim','unit.move.deliver','unit.location.read')},
+  technician:{label:'Technician',permissions:keys('schedule.read','unit.read','unit.create','unit.location.read','ro.read','inspection.read','inspection.create','inspection.update')},
+  foreman:{label:'Foreman',permissions:keys('schedule.read','checkin.create','unit.read','unit.create','unit.move.request','unit.location.read','ro.read','ro.create','ro.update','ro.assign','inspection.read','reports.read')},
+  sales:{label:'Sales',permissions:keys('unit.read','unit.create','customer.read','customer.contact.read','ro.read')},
+  parts:{label:'Parts',permissions:keys('unit.read','unit.create','unit.location.read','ro.read')},
+  pdi:{label:'PDI',permissions:keys('unit.read','unit.create','unit.move.request','unit.location.read','ro.read','inspection.read','inspection.create')},
+  finance_manager:{label:'Finance Manager',permissions:keys('finance.read','finance.manage','payroll.read','payroll.manage','reports.read','ro.read','users.read')},
+});
+const isText=(x)=>typeof x==='string'&&x.trim().length>0;
+function validateRoleTemplate(role){
+ if(!role||!isText(role.id)||!isText(role.label))throw new Error('Role ID and label required');
+ if(!Array.isArray(role.permissions)||new Set(role.permissions).size!==role.permissions.length)throw new Error('Unique permissions required');
+ for(const p of role.permissions)if(!Object.hasOwn(PERMISSIONS,p))throw new Error('Unrecognized permission: '+p);
+ return {id:role.id,label:role.label.trim(),permissions:[...role.permissions],archived:Boolean(role.archived),system:Boolean(role.system)};
+}
+function createRoleTemplate(input,existing=[]){
+ const role=validateRoleTemplate({...input,archived:false,system:false});
+ if(existing.some(r=>r.id===role.id))throw new Error('Role ID already exists');
+ if(role.id==='owner')throw new Error('Owner authority is not a custom role');
+ return role;
+}
+function updateRoleTemplate(current,patch){
+ if(current?.system)throw new Error('System role cannot be directly edited');
+ if(!current||current.archived)throw new Error('Role missing or archived');
+ return validateRoleTemplate({...current,...patch,id:current.id});
+}
+function archiveRoleTemplate(role,{assignedUsers=0}={}){
+ if(!role||role.system||role.id==='owner')throw new Error('Protected system role');
+ if(assignedUsers>0)throw new Error('Reassign employees before archiving this role');
+ return {...role,archived:true};
+}
+function defaultModuleSettings(){
+ return Object.fromEntries(Object.entries(MODULES).map(([key,value])=>[key,value.defaultEnabled]));
+}
+function effectivePermissions({active=true,isOwner=false,roles=[],overrides={},modules=defaultModuleSettings()}={}){
+ if(!active)return {allowed:[],denied:Object.keys(PERMISSIONS),sources:{},modules:{...modules}};
+ const base=new Set();
+ for(const role of roles){
+  if(!role||role.archived)continue;
+  for(const p of role.permissions||[])if(Object.hasOwn(PERMISSIONS,p))base.add(p);
+ }
+ const granted=[],denied=[],sources={};
+ for(const [key,metadata] of Object.entries(PERMISSIONS)){
+  const moduleActive=!metadata.module||modules[metadata.module]===true;
+  let permitted=isOwner||base.has(key);
+  let source=isOwner?'Owner':base.has(key)?'Role template':'Not granted';
+  // A per-user override has three states: inherit, allow, deny.
+  // Owner is not downgraded by user overrides; manage owner through protected ownership workflow.
+  if(!isOwner && (overrides[key]==='allow'||overrides[key]==='deny')){
+   permitted=overrides[key]==='allow';source='User '+overrides[key];
+  }
+  if(!moduleActive){permitted=false;source='Module disabled';}
+  (permitted?granted:denied).push(key);sources[key]=source;
+ }
+ return {allowed:granted,denied,sources,modules:{...modules}};
+}
+function hasPermission(access,key){return !!access&&access.allowed?.includes(key)===true;}
+function mayAssignPermission({actorAccess,actorIsOwner=false,targetIsSelf=false,permission,mode}){
+ if(!Object.hasOwn(PERMISSIONS,permission))return false;
+ if(!['allow','deny','inherit'].includes(mode))return false;
+ if(!hasPermission(actorAccess,'permissions.assign'))return false;
+ if(targetIsSelf)return false;
+ // No delegated admin may grant permissions the admin does not possess.
+ if(mode==='allow'&&!actorIsOwner&&!hasPermission(actorAccess,permission))return false;
+ if(PERMISSIONS[permission].sensitive && mode==='allow'&&!actorIsOwner
+    &&!hasPermission(actorAccess,'payroll.manage'))return false;
+ return true;
+}
+function visibleModules(access){
+ return Object.entries(MODULES).filter(([key])=>access?.modules?.[key]===true)
+   .map(([key,meta])=>({key,...meta}));
+}
+
+const $=id=>document.getElementById(id);
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const html=escapeHtml;
+const now=()=>new Date().toLocaleString();
+const demoUsers=[
+ {id:'usr-owner',name:'Alex Morgan',email:'alex@example.test',phone:'(707) 555-0100',extension:'100',position:'pos-owner',manager:null,role:'owner',status:'active',owner:true,payBasis:'salary',payRate:'125000',overrides:{}},
+ {id:'usr-admin',name:'Mia Thompson',email:'mia@example.test',phone:'(707) 555-0111',extension:'112',position:'pos-manager',manager:'usr-owner',role:'administrator',status:'active',owner:false,payBasis:'salary',payRate:'92000',overrides:{}},
+ {id:'usr-writer',name:'Casey Rivera',email:'casey@example.test',phone:'(707) 555-0122',extension:'115',position:'pos-writer',manager:'usr-admin',role:'service_writer',status:'active',owner:false,payBasis:'hourly',payRate:'33.00',overrides:{}},
+ {id:'usr-porter',name:'Jordan Ellis',email:'jordan@example.test',phone:'(707) 555-0133',extension:'210',position:'pos-porter',manager:'usr-admin',role:'porter',status:'active',owner:false,payBasis:'hourly',payRate:'23.00',overrides:{}},
+ {id:'usr-tech',name:'Morgan Lee',email:'morgan@example.test',phone:'(707) 555-0144',extension:'228',position:'pos-technician',manager:'usr-admin',role:'technician',status:'active',owner:false,payBasis:'flat_rate',payRate:'38.50',overrides:{}},
+ {id:'usr-finance',name:'Taylor Brooks',email:'taylor@example.test',phone:'(707) 555-0155',extension:'134',position:'pos-finance',manager:'usr-owner',role:'finance_manager',status:'active',owner:false,payBasis:'salary',payRate:'84000',overrides:{}}
+];
+const positions=[
+ {id:'pos-owner',title:'Dealer Principal',department:'Administration',active:true},
+ {id:'pos-manager',title:'Service Manager',department:'Service',active:true},
+ {id:'pos-writer',title:'Service Writer',department:'Service',active:true},
+ {id:'pos-porter',title:'Porter',department:'Lot Operations',active:true},
+ {id:'pos-technician',title:'Service Technician',department:'Shop',active:true},
+ {id:'pos-finance',title:'Finance Manager',department:'Accounting',active:true}
+];
+const roles=Object.entries(ROLE_TEMPLATES).map(([id,template])=>({id,label:template.label,permissions:[...template.permissions],system:true,archived:false}));
+const logs=[{time:now(),actor:'System',text:'Example dealership initialized with core modules enabled and advanced modules disabled.'}];
+const state={
+ page:'users',selectedUserId:'usr-writer',profileTab:'contact',viewerId:'usr-owner',
+ selectedRoleId:'service_writer',selectedPositionId:'pos-writer',
+ users:demoUsers,roles,positions,modules:defaultModuleSettings(),logs
+};
+let dialogAction=null,lastFocused=null;
+function viewer(){return state.users.find(u=>u.id===state.viewerId);}
+function selectedUser(){return state.users.find(u=>u.id===state.selectedUserId)??state.users[0];}
+function selectedRole(){return state.roles.find(r=>r.id===state.selectedRoleId)??state.roles[0];}
+function selectedPosition(){return state.positions.find(p=>p.id===state.selectedPositionId)??state.positions[0];}
+function positionName(id){return state.positions.find(p=>p.id===id)?.title??'Unassigned';}
+function roleName(id){return id==='owner'?'Dealership Owner':state.roles.find(r=>r.id===id)?.label??'Unassigned';}
+function accessFor(user){
+ if(!user)return effectivePermissions({active:false});
+ return effectivePermissions({active:user.status==='active',isOwner:user.owner,
+  roles:user.owner?[]:state.roles.filter(r=>r.id===user.role),
+  overrides:user.overrides,modules:state.modules});
+}
+function actorAccess(){return accessFor(viewer());}
+function allowed(p){return hasPermission(actorAccess(),p);}
+function actorOwner(){return viewer()?.owner===true;}
+function canViewPage(page){
+ if(page==='users')return allowed('users.read');
+ if(page==='roles')return allowed('roles.read');
+ if(page==='positions')return allowed('users.read');
+ if(page==='modules')return allowed('modules.manage');
+ if(page==='audit')return allowed('audit.read');
+ return false;
+}
+function audit(text,target=''){
+ state.logs.unshift({time:now(),actor:viewer()?.name??'System',text,target});
+}
+let toastTimer=null;
+function inform(text){
+ const el=$('toast');el.textContent=text;el.hidden=false;
+ if(toastTimer)clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.hidden=true,3600);
+}
+function initials(name){return String(name??'').split(/\s+/).slice(0,2).map(s=>s[0]).join('').toUpperCase();}
+function button(label,action,{variant='',disabled=false}={}){
+ return '<button type="button" class="ui-button '+variant+'" data-action="'+html(action)+'"'+(disabled?' disabled':'')+'>'+html(label)+'</button>';
+}
+function heading(kicker,title,subtitle,actions=''){
+ return '<div class="page-heading"><div><p class="overline">'+html(kicker)+'</p><h1>'+html(title)+'</h1><p>'+html(subtitle)+'</p></div>'+
+  '<div class="heading-actions">'+actions+'</div></div>';
+}
+function field(label,id,value='',disabled=false,type='text'){
+ return '<div class="field"><label for="'+id+'">'+html(label)+'</label><input type="'+type+'" id="'+id+'" value="'+html(value)+'"'+(disabled?' disabled':'')+'></div>';
+}
+function selectField(label,id,value,options,disabled=false){
+ return '<div class="field"><label for="'+id+'">'+html(label)+'</label><select id="'+id+'"'+(disabled?' disabled':'')+'>'+
+  options.map(([id,label])=>'<option value="'+html(id)+'"'+(String(id)===String(value)?' selected':'')+'>'+html(label)+'</option>').join('')+'</select></div>';
+}
+function roleOptions(){return state.roles.filter(r=>!r.archived).map(r=>[r.id,r.label]);}
+function positionOptions(){return [['','Unassigned'],...state.positions.filter(p=>p.active).map(p=>[p.id,p.title])];}
+function employeeOptions(current){return [['','No supervisor'],...state.users.filter(u=>u.id!==current.id).map(u=>[u.id,u.name])];}
+function navState(){
+ document.querySelectorAll('[data-page]').forEach(b=>{
+  const page=b.dataset.page;b.classList.toggle('active',state.page===page);
+  b.hidden=!canViewPage(page);
+ });
+ const m=$('top-add');m.disabled=!(allowed('users.create')||allowed('roles.manage')||allowed('positions.manage'));
+ const vs=$('viewer-select');
+ const prev=vs.value;
+ vs.innerHTML=state.users.map(u=>'<option value="'+html(u.id)+'"'+(u.id===state.viewerId?' selected':'')+'>'+html(u.name)+'</option>').join('');
+ if(prev && state.users.some(u=>u.id===prev)&&prev===state.viewerId)vs.value=prev;
+}
+function renderUsers(){
+ const users=state.users;
+ const stats=[
+  ['Employees',users.length,'All branch members'],
+  ['Active',users.filter(u=>u.status==='active').length,'Current access'],
+  ['Invited',users.filter(u=>u.status==='invited').length,'Awaiting activation'],
+  ['Role templates',state.roles.filter(r=>!r.archived).length,'Reusable policies']
+ ];
+ const summary='<div class="summary-strip">'+stats.map(([label,val,desc])=>'<section class="admin-card metric"><label>'+html(label)+'</label><strong>'+val+'</strong><small>'+html(desc)+'</small></section>').join('')+'</div>';
+ const left='<div class="admin-card"><div class="card-top"><h2>Employee directory</h2><span class="role-chip">'+users.length+' people</span></div>'+
+  '<div class="employee-list">'+users.map(u=>'<button type="button" class="employee-row'+(u.id===state.selectedUserId?' active':'')+'" data-user="'+html(u.id)+'">'+
+   '<span class="avatar">'+html(initials(u.name))+'</span><span class="employee-details"><strong>'+html(u.name)+'</strong>'+
+   '<span>'+html(positionName(u.position))+' · '+html(roleName(u.role))+'</span></span>'+
+   '<span class="status '+html(u.status)+'">'+html(u.status)+'</span></button>').join('')+'</div></div>';
+ const u=selectedUser(),isSelectedSelf=u.id===state.viewerId;
+ const canEdit=allowed('users.update')||isSelectedSelf;
+ const tabs=['contact','position','payroll','permissions','activity'];
+ const activeTabs=tabs.filter(t=>t!=='payroll'||allowed('payroll.read'));
+ if(!activeTabs.includes(state.profileTab))state.profileTab='contact';
+ const detail='<div class="admin-card"><div class="profile-header"><span class="avatar">'+html(initials(u.name))+'</span>'+
+  '<div><h2>'+html(u.name)+'</h2><p>'+html(positionName(u.position))+' · '+html(roleName(u.role))+'</p></div>'+
+  '<div class="profile-actions"><span class="status '+html(u.status)+'">'+html(u.status)+'</span>'+
+  (u.owner?'<span class="role-chip">Protected Owner</span>':button('Deactivate','deactivate',{variant:'danger',disabled:!allowed('users.deactivate')||u.status==='inactive'}))+'</div></div>'+
+  '<div class="tabbar" role="tablist">'+activeTabs.map(tab=>'<button type="button" role="tab" aria-selected="'+(state.profileTab===tab)+'" class="'+(state.profileTab===tab?'active':'')+'" data-tab="'+tab+'">'+html(tab[0].toUpperCase()+tab.slice(1))+'</button>').join('')+'</div>'+
+  '<div class="profile-body">'+(
+   state.profileTab==='contact'?contactPanel(u,canEdit):
+   state.profileTab==='position'?positionPanel(u):
+   state.profileTab==='payroll'?payrollPanel(u):
+   state.profileTab==='permissions'?permissionsPanel(u):
+   activityPanel(u)
+  )+'</div></div>';
+ $('admin-content').innerHTML=heading('Administration / Staff','Users & Employees',
+  'One employee record, with separate contact, position, payroll and effective permissions.',
+  button('+ Invite employee','invite-user',{variant:'primary',disabled:!allowed('users.create')}))+summary+
+  '<div class="two-panel">'+left+detail+'</div>';
+}
+function contactPanel(u,canEdit){
+ return '<div class="field-grid">'+field('Display name','contact-name',u.name,!canEdit)+
+  field('Work email','contact-email',u.email,!canEdit,'email')+
+  field('Work phone','contact-phone',u.phone,!canEdit,'tel')+
+  field('Extension','contact-ext',u.extension,!canEdit)+'</div>'+
+  '<p class="field-hint">Contact fields are part of the employee directory. Payroll and permission records are stored and protected separately.</p>'+
+  '<div class="field-actions">'+button('Save contact details','save-contact',{variant:'primary',disabled:!canEdit})+'</div>';
+}
+function positionPanel(u){
+ const editable=allowed('positions.manage')||allowed('users.update');
+ return '<div class="field-grid">'+
+  selectField('Position','employee-position',u.position,positionOptions(),!editable||u.owner)+
+  selectField('Reports to','employee-manager',u.manager||'',employeeOptions(u),!editable||u.owner)+
+  field('Department','employee-dept',state.positions.find(p=>p.id===u.position)?.department||'',true)+
+  field('Employment status','employee-status',u.status,true)+'</div>'+
+  '<p class="field-hint">Positions describe organizational responsibilities, not database access. A title change does not grant permissions.</p>'+
+  '<div class="field-actions">'+button('Manage positions','manage-positions',{disabled:!allowed('positions.manage')})+
+    button('Save position assignment','save-position',{variant:'primary',disabled:!editable||u.owner})+'</div>';
+}
+function payrollPanel(u){
+ if(!allowed('payroll.read'))return '<div class="inline-callout">Payroll information is restricted to employees explicitly granted access.</div>';
+ const edit=allowed('payroll.manage'),basis=[['hourly','Hourly'],['salary','Salary'],['flat_rate','Flat rate'],['mixed','Hourly + flat rate']];
+ return '<div class="inline-callout"><strong>Confidential compensation record.</strong> Payroll information is not included in general employee search results, the Unit record, or RO notifications.</div>'+
+  '<div class="field-grid" style="margin-top:17px">'+selectField('Pay method','pay-basis',u.payBasis,basis,!edit)+
+    field('Base pay rate (USD)','pay-rate',u.payRate,!edit,'number')+'</div>'+
+  '<p class="field-hint">Illustrative pay data only. The production schema stores compensation in a private table, not in the public employee directory. Historical changes require versioned effective dates and audit.</p>'+
+  '<div class="field-actions">'+button('Save compensation','save-payroll',{variant:'primary',disabled:!edit})+'</div>';
+}
+const CATEGORIES=[
+  {title:'Administration',module:null,keys:Object.keys(PERMISSIONS).filter(p=>PERMISSIONS[p].module===null)},
+  ...Object.keys(MODULES).map(key=>({title:MODULES[key].label,module:key,keys:Object.keys(PERMISSIONS).filter(p=>PERMISSIONS[p].module===key)}))
+];
+function permissionGroups(access,u,mode){
+ const isOwner=u?.owner===true,canEdit=mode==='role'?allowed('roles.manage')&&!selectedRole()?.system:
+  allowed('permissions.assign')&&!isOwner&&u?.id!==state.viewerId;
+ return CATEGORIES.map((group,idx)=>{
+  const disabled=group.module && state.modules[group.module]!==true;
+  const rows=group.keys.map(key=>{
+   const p=PERMISSIONS[key],allowedNow=hasPermission(access,key);
+   const source=access.sources[key]??'Not granted';
+   const stateOverride=mode==='user'?(u.overrides[key]??'inherit'):(selectedRole()?.permissions.includes(key)?'allow':'deny');
+   const right=mode==='user'?
+    '<select aria-label="Override '+html(p.label)+'" data-permission-override="'+html(key)+'"'+(canEdit?'':' disabled')+'>'+
+    [['inherit','Inherit'],['allow','Allow'],['deny','Deny']].map(([value,label])=>
+      '<option value="'+value+'"'+(value===stateOverride?' selected':'')+'>'+label+'</option>').join('')+'</select>':
+    '<input class="inline-switch" aria-label="Grant '+html(p.label)+'" type="checkbox" data-role-permission="'+html(key)+'"'+
+    (stateOverride==='allow'?' checked':'')+(canEdit?'':' disabled')+'>';
+   return '<div class="permission-row"><div><strong>'+html(p.label)+'</strong>'+
+    '<small>'+html(source)+(p.sensitive?' · Sensitive data':'')+'</small></div>'+
+    '<span class="effective '+(allowedNow?'yes':'no')+'">'+(allowedNow?'Allowed':'Denied')+'</span>'+right+'</div>';
+  }).join('');
+  return '<details class="perm-group"'+(idx===0||idx===3?' open':'')+'><summary>'+html(group.title)+
+   '<span class="muted">'+group.keys.length+' permissions'+(disabled?' · Module off':'')+'</span></summary>'+rows+'</details>';
+ }).join('');
+}
+function permissionsPanel(u){
+ const access=accessFor(u),canAssign=allowed('permissions.assign')&&!u.owner&&u.id!==state.viewerId;
+ return '<div class="permission-intro"><div><strong>Assigned permissions</strong><p class="field-hint" style="margin:3px 0 0">Role baseline + individual exceptions + enabled modules</p></div>'+
+  '<span class="role-chip">'+access.allowed.length+' effective permissions</span></div>'+
+  (u.owner?'<div class="inline-callout"><strong>Founding Owner.</strong> Full administrative authority is protected. Advanced modules remain unavailable until enabled in Module Settings.</div>':
+  '<div class="field-grid">'+selectField('Permission template','user-role',u.role,roleOptions(),!canAssign)+
+  '<div class="field"><label>Individual exceptions</label><div class="inline-callout">Inherit uses the template. Allow or Deny applies only to this employee.</div></div></div>')+
+  '<p class="field-hint">The effective result is calculated per organization and branch. This demonstration changes only fictional browser records.</p>'+
+  permissionGroups(access,u,'user');
+}
+function activityPanel(u){
+ const entries=state.logs.filter(x=>x.target===u.id||!x.target).slice(0,20);
+ return '<p class="field-hint">Permission, position, account and pay changes require an immutable audit record in production.</p>'+
+  (entries.length?entries.map(x=>'<div class="audit-row"><time>'+html(x.time)+'</time><span>'+html(x.text)+'</span><strong>'+html(x.actor)+'</strong></div>').join(''):'<div class="inline-callout">No recorded changes yet.</div>');
+}
+function renderRoles(){
+ const r=selectedRole(),isOwner=actorOwner(),canManage=allowed('roles.manage'),canEdit=canManage&&!r.system;
+ const roleAccess=effectivePermissions({roles:[r],modules:state.modules});
+ const left='<div class="admin-card"><div class="card-top"><h2>Permission templates</h2><span class="role-chip">'+state.roles.filter(r=>!r.archived).length+' active</span></div>'+
+  '<div class="role-list">'+state.roles.filter(x=>!x.archived).map(x=>
+   '<button type="button" class="role-item'+(x.id===r.id?' active':'')+'" data-role="'+html(x.id)+'"><span>'+
+   '<strong>'+html(x.label)+'</strong><small>'+html(x.system?'Protected starter template':'Custom role')+'</small></span>'+
+   '<span class="role-chip">'+x.permissions.length+'</span></button>').join('')+'</div></div>';
+ const right='<div class="admin-card"><div class="role-panel"><div class="permission-intro"><div><h2>'+html(r.label)+'</h2>'+
+   '<p class="field-hint">'+html(r.system?'Starter template is protected. Clone it to customize.':'Custom template · versioned changes in production.')+'</p></div>'+
+   '<div class="heading-actions">'+button('Clone template','clone-role',{disabled:!canManage})+
+   button('Rename','rename-role',{disabled:!canEdit})+
+   button('Archive','archive-role',{variant:'danger',disabled:!canEdit})+'</div></div>'+
+   '<div class="inline-callout"><strong>Reusable template.</strong> Changes to a role affect every employee assigned to it, except where an individual override applies. Roles do not replace job positions.</div>'+
+   permissionGroups(roleAccess,null,'role')+'</div></div>';
+ $('admin-content').innerHTML=heading('Administration / Access','Roles & Permissions',
+  'Create role templates once, assign them to staff, and maintain controlled per-user exceptions.',
+  button('+ Create role','create-role',{variant:'primary',disabled:!canManage}))+
+  '<div class="two-panel">'+left+right+'</div>';
+}
+function renderPositions(){
+ const p=selectedPosition(),assigned=state.users.filter(u=>u.position===p.id&&u.status!=='inactive').length;
+ const canEdit=allowed('positions.manage');
+ const left='<div class="admin-card"><div class="card-top"><h2>Job positions</h2><span class="role-chip">'+state.positions.filter(p=>p.active).length+' active</span></div>'+
+ '<div class="role-list">'+state.positions.filter(p=>p.active).map(x=>
+ '<button type="button" class="role-item'+(p.id===x.id?' active':'')+'" data-position="'+html(x.id)+'"><span>'+
+ '<strong>'+html(x.title)+'</strong><small>'+html(x.department||'No department')+'</small></span>'+
+ '<span class="role-chip">'+state.users.filter(u=>u.position===x.id).length+'</span></button>').join('')+'</div></div>';
+ const right='<div class="admin-card"><div class="card-top"><h2>Position details</h2></div><div class="card-body">'+
+  '<div class="field-grid">'+field('Job title','position-title',p.title,!canEdit)+
+  field('Department','position-dept',p.department||'',!canEdit)+'</div>'+
+  '<p class="field-hint">'+assigned+' active employee(s) assigned. Positions control directory organization and reporting, not access rights.</p>'+
+  '<div class="field-actions">'+button('Archive position','archive-position',{variant:'danger',disabled:!canEdit||assigned>0})+
+  button('Save position','save-position-definition',{variant:'primary',disabled:!canEdit})+'</div></div></div>';
+ $('admin-content').innerHTML=heading('Administration / Organization','Positions',
+  'Maintain job titles, departments and reporting structures independently from permissions.',
+  button('+ Create position','create-position',{variant:'primary',disabled:!canEdit}))+
+  '<div class="two-panel">'+left+right+'</div>';
+}
+function renderModules(){
+ const basic=Object.entries(MODULES).filter(([,v])=>v.tier==='basic');
+ const advanced=Object.entries(MODULES).filter(([,v])=>v.tier==='advanced');
+ const canEdit=allowed('modules.manage');
+ const cards=list=>'<div class="module-grid">'+list.map(([key,m])=>
+  '<div class="module-card'+(state.modules[key]?'':' disabled')+'"><div>'+
+  '<strong>'+html(m.label)+'</strong><p>'+html(state.modules[key]?'Available to authorized staff':'Disabled for this dealership')+'</p></div>'+
+  '<input type="checkbox" class="inline-switch" aria-label="Enable '+html(m.label)+'" data-toggle-module="'+html(key)+'"'+
+   (state.modules[key]?' checked':'')+(canEdit?'':' disabled')+'></div>').join('')+'</div>';
+ $('admin-content').innerHTML=heading('Administration / Configuration','Modules',
+  'Basic modules start enabled. Advanced modules start disabled. A module switch never grants employee permissions.')+
+ '<div class="inline-callout"><strong>Two gates are required:</strong> The dealership must enable the module, and an employee must hold the relevant permission. Owner authority can enable modules but cannot use a disabled module.</div>'+
+ '<h2 class="module-section-title">Basic Modules · Enabled by default</h2>'+cards(basic)+
+ '<h2 class="module-section-title">Advanced Modules · Disabled by default</h2>'+cards(advanced)+
+ '<p class="field-hint">Future commercial plan entitlements are an additional gate. Disabling core modules may affect dependent workflows and will require an impact review in production.</p>';
+}
+function renderAudit(){
+ const logs=state.logs;
+ $('admin-content').innerHTML=heading('Administration / Security','Audit History',
+  'Track changes to roles, overrides, job positions, module configuration and sensitive employee records.')+
+  '<div class="admin-card"><div class="card-top"><h2>Recent changes</h2><span class="role-chip">'+logs.length+' events</span></div>'+
+  logs.map(x=>'<div class="audit-row"><time>'+html(x.time)+'</time><span>'+html(x.text)+'</span><strong>'+html(x.actor)+'</strong></div>').join('')+'</div>';
+}
+function render(){
+ navState();
+ if(!canViewPage(state.page)){
+  $('admin-content').innerHTML='<div class="admin-card blocked-state"><h2>Access restricted</h2><p>Your current role cannot open this administrative module. Permission changes must be approved by an authorized owner or administrator.</p></div>';
+  return;
+ }
+ if(state.page==='users')renderUsers();
+ else if(state.page==='roles')renderRoles();
+ else if(state.page==='positions')renderPositions();
+ else if(state.page==='modules')renderModules();
+ else renderAudit();
+}
+function formValue(id){return $(id)?.value?.trim()??'';}
+function saveProfile(){
+ const u=selectedUser(),self=u.id===state.viewerId;
+ if(!allowed('users.update')&&!self)return inform('This role cannot edit employee profiles.');
+ const name=formValue('contact-name'),email=formValue('contact-email');
+ if(!name||!email.includes('@'))return inform('Enter a valid name and work email.');
+ u.name=name;u.email=email;u.phone=formValue('contact-phone');u.extension=formValue('contact-ext');
+ audit('Updated contact information',u.id);inform('Contact details saved in the demo.');render();
+}
+function savePositionAssignment(){
+ const u=selectedUser();if(u.owner||(!allowed('positions.manage')&&!allowed('users.update')))return;
+ u.position=formValue('employee-position');u.manager=formValue('employee-manager')||null;
+ audit('Updated position assignment for '+u.name,u.id);inform('Position updated in the demo.');render();
+}
+function savePayroll(){
+ if(!allowed('payroll.manage'))return inform('Payroll management access required.');
+ const u=selectedUser(),basis=formValue('pay-basis'),rate=Number(formValue('pay-rate'));
+ if(!['hourly','salary','flat_rate','mixed'].includes(basis)||!Number.isFinite(rate)||rate<0)return inform('Enter a valid compensation rate.');
+ u.payBasis=basis;u.payRate=rate.toFixed(2);
+ audit('Updated confidential compensation settings for '+u.name,u.id);inform('Example pay record updated.');render();
+}
+function savePositionDefinition(){
+ if(!allowed('positions.manage'))return;
+ const p=selectedPosition(),title=formValue('position-title');if(!title)return inform('Position title required.');
+ p.title=title;p.department=formValue('position-dept');
+ audit('Edited position '+title);inform('Position saved.');render();
+}
+function setRolePermission(permission,enabled){
+ if(!allowed('roles.manage'))return;
+ const role=selectedRole();if(role.system)return inform('Clone a protected starter role to customize it.');
+ if(!Object.hasOwn(PERMISSIONS,permission))return;
+ const set=new Set(role.permissions);enabled?set.add(permission):set.delete(permission);
+ role.permissions=[...set];audit('Changed '+permission+' for role '+role.label);
+ inform('Role template updated.');render();
+}
+function setOverride(permission,decision){
+ const u=selectedUser(),actor=viewer();
+ if(!mayAssignPermission({actorAccess:actorAccess(),actorIsOwner:actor.owner,targetIsSelf:actor.id===u.id,permission,mode:decision})||u.owner){
+  inform('Not authorized to change this permission.');render();return;
+ }
+ if(decision==='inherit')delete u.overrides[permission];else u.overrides[permission]=decision;
+ audit('Set '+permission+' to '+decision+' for '+u.name,u.id);
+ inform('Individual exception saved in demo.');render();
+}
+function setRoleAssignment(roleId){
+ const u=selectedUser();
+ if(u.owner||u.id===state.viewerId||!allowed('permissions.assign'))return inform('Role changes are restricted.');
+ const target=state.roles.find(r=>r.id===roleId&&!r.archived);if(!target)return;
+ if(!actorOwner() && target.permissions.some(p=>!allowed(p)))
+  return inform('Cannot assign permissions above your own access.');
+ u.role=roleId;u.overrides={};
+ audit('Applied '+target.label+' template to '+u.name,u.id);
+ inform('Template applied to employee.');render();
+}
+function setModule(key,enabled){
+ if(!allowed('modules.manage')||!Object.hasOwn(MODULES,key))return;
+ state.modules[key]=enabled;
+ audit((enabled?'Enabled':'Disabled')+' module '+MODULES[key].label);
+ inform('Dealership module configuration updated in demo.');
+ render();
+}
+function openDialog(kind,context={}){
+ const owner=actorOwner();
+ if(kind==='user'&&!allowed('users.create'))return;
+ if((kind==='role'||kind==='clone-role'||kind==='rename-role')&&!allowed('roles.manage'))return;
+ if(kind==='position'&&!allowed('positions.manage'))return;
+ lastFocused=document.activeElement;
+ $('dialog-kicker').textContent='Dealership administration';
+ const labels={user:'Invite employee',role:'Create role',position:'Create position','clone-role':'Clone role template','rename-role':'Rename custom role','archive-role':'Archive role','deactivate-user':'Deactivate employee'};
+ $('dialog-title').textContent=labels[kind]??'Confirm action';
+ let form='';
+ if(kind==='user')form='<div class="field-grid">'+field('Employee name','dialog-name')+field('Work email','dialog-email','','','email')+
+ selectField('Permission template','dialog-role','service_writer',roleOptions())+
+ selectField('Position','dialog-position','',positionOptions())+'</div><p class="field-hint">Demo invitation only. Production must use verified Auth invitations from a trusted server.</p>';
+ if(kind==='position')form='<div class="field-grid">'+field('Job title','dialog-name')+field('Department','dialog-dept')+'</div>';
+ if(kind==='role'||kind==='clone-role')form='<div class="field-grid">'+field('Role ID','dialog-id',kind==='clone-role'?selectedRole().id+'_custom':'')+
+ field('Role name','dialog-name',kind==='clone-role'?selectedRole().label+' (Custom)':'')+'</div>'+
+ '<p class="field-hint">New role starts with '+(kind==='clone-role'?'the selected template grants':'no permissions')+'. Edit grants in the role editor.</p>';
+ if(kind==='rename-role')form=field('Role name','dialog-name',selectedRole().label);
+ if(kind==='archive-role')form='<div class="inline-callout">Archive '+html(selectedRole().label)+'? Assigned employees must be moved to another role first. Historical audit records remain.</div>';
+ if(kind==='deactivate-user')form='<div class="inline-callout">Deactivate '+html(selectedUser().name)+'? The employee will lose all permissions immediately in the proposed model. This demo does not revoke an actual login session.</div>';
+ $('dialog-body').innerHTML=form;
+ dialogAction={kind,...context};
+ $('dialog-save').textContent=kind==='user'?'Create example employee':kind.startsWith('archive')?'Archive':kind==='deactivate-user'?'Deactivate':'Save';
+ $('dialog-backdrop').hidden=false;
+ $('dialog-body').querySelector('input,select')?.focus();
+}
+function closeDialog(){ $('dialog-backdrop').hidden=true;dialogAction=null;lastFocused?.focus?.(); }
+function saveDialog(){
+ const kind=dialogAction?.kind;if(!kind)return;
+ try {
+ if(kind==='user'){
+  if(!allowed('users.create'))throw Error('Not authorized');
+  const name=formValue('dialog-name'),email=formValue('dialog-email');
+  if(!name||!email.includes('@'))throw Error('Name and valid email required');
+  if(state.users.some(u=>u.email.toLowerCase()===email.toLowerCase()))throw Error('Employee email already exists');
+  const roleId=formValue('dialog-role'),selected=state.roles.find(r=>r.id===roleId);
+  if(!actorOwner()&&selected.permissions.some(p=>!allowed(p)))throw Error('Cannot invite with more access than your own');
+  const user={id:'usr-'+Date.now(),name,email,phone:'',extension:'',position:formValue('dialog-position'),manager:state.viewerId,role:roleId,status:'invited',owner:false,payBasis:'hourly',payRate:'0',overrides:{}};
+  state.users.push(user);state.selectedUserId=user.id;state.page='users';state.profileTab='contact';
+  audit('Prepared invitation for '+name,user.id);
+ } else if(kind==='position'){
+  if(!allowed('positions.manage'))throw Error('Not authorized');
+  const name=formValue('dialog-name');if(!name)throw Error('Job title required');
+  const p={id:'pos-'+Date.now(),title:name,department:formValue('dialog-dept'),active:true};
+  state.positions.push(p);state.selectedPositionId=p.id;state.page='positions';audit('Created job position '+name);
+ } else if(kind==='role'||kind==='clone-role'){
+  if(!allowed('roles.manage'))throw Error('Not authorized');
+  const id=formValue('dialog-id').toLowerCase().replace(/[^a-z0-9_]/g,'_');
+  const name=formValue('dialog-name');
+  if(!/^[a-z][a-z0-9_]{1,63}$/.test(id))throw Error('Role ID must start with a letter and use 2-64 letters, digits or underscores');
+  const grants=kind==='clone-role'?[...selectedRole().permissions]:[];
+  if(!actorOwner()&&grants.some(p=>!allowed(p)))throw Error('Cannot clone a template with permissions beyond your own');
+  const role=createRoleTemplate({id,label:name,permissions:grants},state.roles);
+  state.roles.push(role);state.selectedRoleId=id;state.page='roles';audit('Created role template '+name);
+ } else if(kind==='rename-role'){
+  const role=selectedRole(),label=formValue('dialog-name');
+  const result=updateRoleTemplate(role,{label});Object.assign(role,result);audit('Renamed role '+role.label);
+ } else if(kind==='archive-role'){
+  if(!allowed('roles.manage'))throw Error('Not authorized');
+  const role=selectedRole();
+  const archived=archiveRoleTemplate(role,{assignedUsers:state.users.filter(u=>u.role===role.id&&u.status!=='inactive').length});
+  Object.assign(role,archived);state.selectedRoleId='service_writer';audit('Archived role '+role.label);
+ } else if(kind==='deactivate-user'){
+  const u=selectedUser();
+  if(!allowed('users.deactivate')||u.owner||u.id===state.viewerId)throw Error('Protected account');
+  u.status='inactive';audit('Deactivated '+u.name,u.id);
+ }
+ closeDialog();inform('Demo change saved.');render();
+ } catch(err){inform(err.message);}
+}
+function archivePosition(){
+ if(!allowed('positions.manage'))return;
+ const p=selectedPosition();
+ if(state.users.some(u=>u.position===p.id&&u.status!=='inactive'))return inform('Reassign active employees before archiving.');
+ p.active=false;state.selectedPositionId=state.positions.find(x=>x.active)?.id??p.id;audit('Archived job position '+p.title);
+ inform('Position archived.');render();
+}
+function onAction(action){
+ switch(action){
+ case 'invite-user':openDialog('user');break;
+ case 'create-role':openDialog('role');break;
+ case 'create-position':openDialog('position');break;
+ case 'clone-role':openDialog('clone-role');break;
+ case 'rename-role':openDialog('rename-role');break;
+ case 'archive-role':openDialog('archive-role');break;
+ case 'archive-position':archivePosition();break;
+ case 'deactivate':openDialog('deactivate-user');break;
+ case 'save-contact':saveProfile();break;
+ case 'save-position':savePositionAssignment();break;
+ case 'save-payroll':savePayroll();break;
+ case 'save-position-definition':savePositionDefinition();break;
+ case 'manage-positions':state.page='positions';render();break;
+ }
+}
+$('admin-content').addEventListener('click',e=>{
+ const user=e.target.closest('[data-user]');if(user){state.selectedUserId=user.dataset.user;state.profileTab='contact';render();return;}
+ const tab=e.target.closest('[data-tab]');if(tab){state.profileTab=tab.dataset.tab;render();return;}
+ const role=e.target.closest('[data-role]');if(role){state.selectedRoleId=role.dataset.role;render();return;}
+ const pos=e.target.closest('[data-position]');if(pos){state.selectedPositionId=pos.dataset.position;render();return;}
+ const btn=e.target.closest('[data-action]');if(btn)onAction(btn.dataset.action);
+});
+$('admin-content').addEventListener('change',e=>{
+ const target=e.target;
+ if(target.dataset.permissionOverride){setOverride(target.dataset.permissionOverride,target.value);return;}
+ if(target.dataset.rolePermission){setRolePermission(target.dataset.rolePermission,target.checked);return;}
+ if(target.dataset.toggleModule){setModule(target.dataset.toggleModule,target.checked);return;}
+ if(target.id==='user-role')setRoleAssignment(target.value);
+});
+document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{state.page=btn.dataset.page;render();});
+$('viewer-select').addEventListener('change',e=>{
+ state.viewerId=e.target.value;
+ if(!canViewPage(state.page))state.page='users';
+ if(!canViewPage('users'))state.selectedUserId=state.viewerId;
+ render();inform('Viewing role switched. This does not authenticate another employee.');
+});
+$('top-add').onclick=e=>{
+ const menu=$('add-menu'),rect=$('top-add').getBoundingClientRect();
+ menu.style.top=(rect.bottom+5)+'px';menu.style.left=Math.max(8,rect.left-80)+'px';menu.style.right='auto';
+ menu.hidden=!menu.hidden;
+ menu.querySelector('[data-add-type=user]').disabled=!allowed('users.create');
+ menu.querySelector('[data-add-type=role]').disabled=!allowed('roles.manage');
+ menu.querySelector('[data-add-type=position]').disabled=!allowed('positions.manage');
+};
+$('add-menu').addEventListener('click',e=>{
+ const b=e.target.closest('[data-add-type]');if(!b)return;
+ $('add-menu').hidden=true;openDialog(b.dataset.addType);
+});
+document.addEventListener('pointerdown',e=>{
+ if(!$('add-menu').hidden&&!$('add-menu').contains(e.target)&&!$('top-add').contains(e.target))$('add-menu').hidden=true;
+ if(!$('global-results').hidden&&!$('global-results').contains(e.target)&&!$('global-query').contains(e.target))$('global-results').hidden=true;
+});
+$('dialog-close').onclick=closeDialog;
+$('dialog-cancel').onclick=closeDialog;
+$('dialog-save').onclick=saveDialog;
+$('dialog-backdrop').addEventListener('mousedown',e=>{if(e.target===$('dialog-backdrop'))closeDialog();});
+function renderGlobalResults(){
+ const q=$('global-query').value.trim().toLowerCase(),host=$('global-results');
+ if(q.length<2){host.hidden=true;return;}
+ host.replaceChildren();
+ const candidates=state.users.filter(u=>allowed('users.read')||u.id===state.viewerId)
+  .filter(u=>[u.name,u.email,positionName(u.position),roleName(u.role)].some(s=>s.toLowerCase().includes(q))).slice(0,12);
+ if(!candidates.length){host.innerHTML='<p class="field-hint" style="padding:9px">No accessible employee records match. Other modules will join this global search when connected to the application shell.</p>';}
+ else for(const u of candidates){
+  const btn=document.createElement('button');btn.type='button';
+  btn.textContent=u.name+' · '+positionName(u.position)+' · '+roleName(u.role);
+  btn.onclick=()=>{state.page='users';state.selectedUserId=u.id;state.profileTab='contact';$('global-query').value='';host.hidden=true;render();};
+  host.append(btn);
+ }
+ host.hidden=false;
+}
+$('global-query').addEventListener('input',renderGlobalResults);
+document.addEventListener('keydown',e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('global-query').focus();$('global-query').select();return;}
+ if(e.key==='Escape'){if(!$('dialog-backdrop').hidden){closeDialog();return;}if(!$('add-menu').hidden){$('add-menu').hidden=true;return;}$('global-results').hidden=true;}
+});
+render();
+})();
+
+</script>
+</body>
+</html>
