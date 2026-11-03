@@ -2,6 +2,8 @@
 Status: architecture sequencing proposal for review, not deployed functionality.
 Strategy: vertical slices, one module per reviewable PR/migration set, with role-focused UI and realistic end-to-end fixtures. Preserve the October operating requirements without implementing the entire product simultaneously.
 
+**Display identification across modules (confirmed November 3, 2026):** employee roles select primary/secondary unit identifiers globally (examples SW customer/RO, technician RO/VIN, porter stock/VIN, sales stock/model). Build a reusable UnitIdentity presentation component over authorized record projections, not per-page formatting rules. Specification: [WF-06 Role-Based Unit Identification](../workflows/06-role-based-unit-identifiers.md). Display preference must never grant customer/VIN/RO read permission, and ambiguous multiple ROs must be resolved by assignment context.
+
 ## Current highest-priority cross-module slice: Unit Intake → Porter → Receiving Team
 
 **User-confirmed November 3, 2026:** any authorized branch employee may register a unit; Service Writer owns the rich check-in workflow; each new workload requires a targeted actionable notification; a porter receives a complete unit/move card, and confirmed delivery notifies both requester and receiving person or role. The durable work-task + notification infrastructure is **cross-cutting** and must be implemented with the first move flow, not postponed until the old standalone communication module.

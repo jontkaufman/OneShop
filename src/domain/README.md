@@ -1,3 +1,7 @@
+# Unit identification domain
+
+`identity-display.mjs` exposes default identifier profiles by employee role, validates primary/secondary selections, formats authorized unit/RO context and handles absent stock/VIN/RO values. It does **not** authorize access. The backend must supply a permission-filtered record and explicit allowed field list; never infer grants from the selected display profile. `identity-demo-ui.js` is a browser-only adapter inlined by the prototype builder.
+
 # Operational handoff domain
 
 This is the first **executable** OneShop domain contract, intentionally independent of React, Supabase and any notification transport.

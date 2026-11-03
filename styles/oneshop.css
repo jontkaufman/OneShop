@@ -172,3 +172,18 @@ html,body{color:var(--os-ink);background:var(--os-canvas)}
 .lookup-result{background:var(--os-surface);border:1px solid var(--os-line);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-radius:7px}
 .lookup-result .muted{font-size:12px}
 @media(max-width:730px){.setting-row{align-items:stretch;flex-direction:column;gap:8px}.setting-row select{width:100%}.theme-grid{grid-template-columns:1fr}.lookup-controls{flex-wrap:wrap}.lookup-controls input{flex-basis:100%}.lookup-result{align-items:flex-start;flex-direction:column}.lookup-result .btn{width:100%}.lookup-title{align-items:flex-start;flex-direction:column}}
+/* Shared role-display configuration (enterprise-dense, responsive). */
+.identifier-config-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+.identifier-live-preview{border:1px solid var(--border);background:var(--soft);padding:16px;border-radius:8px;min-height:165px}
+.identifier-values{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:10px 0}
+.identifier-chip{display:flex;flex-direction:column;gap:3px;min-width:128px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;max-width:100%}
+.identifier-chip small{font-size:11px;line-height:1.35;color:var(--muted);font-weight:700}
+.identifier-chip strong{font-size:15px;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
+.identifier-all-roles{border-top:1px solid var(--border);margin-top:15px;padding-top:11px}
+.identifier-all-roles summary{font-weight:700;color:var(--blue);cursor:pointer;font-size:13px}
+.identifier-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;margin-top:8px}
+.identifier-summary{display:flex;gap:10px;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.identifier-summary b{font-weight:700;color:var(--ink)}
+.identifier-summary span{color:var(--muted);text-align:right}
+.identifier-inline{font-weight:750;color:var(--ink);font-size:14px;margin-top:6px;overflow-wrap:anywhere}
+@media(max-width:800px){.identifier-config-grid{grid-template-columns:1fr}.identifier-summary-grid{grid-template-columns:1fr}.identifier-config-grid .grid2{grid-template-columns:1fr}}

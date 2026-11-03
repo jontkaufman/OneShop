@@ -1,5 +1,15 @@
 # OneShop Intake-to-Storage Click-Through Prototype
 
+## v0.5 — Per-role unit identification settings
+
+**Settings → Unit Identification** provides a compact role selector, primary and secondary identifiers, live unit preview, restore defaults, and collapsed summary of all role profiles. Example defaults: writer = customer + RO; technician = RO + VIN suffix; porter/lot = stock number + VIN suffix; sales = stock + year/make/model.
+
+The same browser-level profile affects the Service Writer confirmation card, porter movement cards, and role-specific notifications. The formatter is shared with Node tests through `src/domain/identity-display.mjs`, inlined into the standalone build through `scripts/build-prototype.py`; the prototype-only adapter is `src/domain/identity-demo-ui.js`.
+
+**Security boundary:** identifier display settings never grant access; the demo uses mock data and has no real permissions. Production must use authorized server projections, org/branch versioned overrides, and active-workflow role selection.
+
+See [WF-06 Role-Based Unit Identification](../docs/workflows/06-role-based-unit-identifiers.md).
+
 ## v0.4 — Role-based notification handoff demonstration
 
 The offline walkthrough now includes a **Notifications** screen. Select the demo role (Service Writer, Porter, Technician, Foreman, Dispatch, PDI, Wash, Detail) to inspect that role's inbox.
