@@ -6,6 +6,12 @@ Strategy: vertical slices, one module per reviewable PR/migration set, with role
 
 **Global, permission-filtered discovery (confirmed November 3, 2026):** Search is a shared application-shell service spanning all modules. Unit registration and Create RO reuse it rather than creating separate identifier search forms. Exact VIN/stock/RO matching ranks highly; related customer, work and future-module results require field-level access. Filter server-side *before* returning results or match counts. Contract: [WF-08 Universal Search](../workflows/08-global-universal-search.md). The current demo is offline only.
 
+## Platform prerequisite: Identity, Roles & Permissions
+
+**Confirmed as a core architectural requirement (November 3, 2026).** Every app module must use central effective permissions for navigation, reads/search, writes, task handoffs, exports and background processes. Account owner = full administrative authority, basic modules on, advanced modules off. Employee roles/templates, per-user overrides, job positions, module toggles and payroll security must remain separate. The database capability resolver and internal commands are applied; the browser admin interface is still an offline review. Do not roll out real accounts until trusted invite/admin endpoints, field-level authorized projections, two-tenant RLS tests, and independent development environment exist.
+
+See [WF-09](../workflows/09-identity-roles-permissions.md).
+
 ## Current highest-priority cross-module slice: Unit Intake → Porter → Receiving Team
 
 **User-confirmed November 3, 2026:** any authorized branch employee may register a unit; Service Writer owns the rich check-in workflow; each new workload requires a targeted actionable notification; a porter receives a complete unit/move card, and confirmed delivery notifies both requester and receiving person or role. The durable work-task + notification infrastructure is **cross-cutting** and must be implemented with the first move flow, not postponed until the old standalone communication module.
