@@ -77,7 +77,7 @@ function openModal(mode,opts={}){
  for(const id of ['unit-save','unit-save-ro'])$(id).hidden=mode!=='unit';$('ro-save').hidden=mode!=='ro';
  $('modal-title').textContent=mode==='unit'?'Add Unit':'Create Repair Order';
  $('modal-kicker').textContent=mode==='unit'?'Unit records / New':'Repair orders / New';
- $('modal-description').textContent=mode==='unit'?'Register the vehicle once. Add an RO now or later.':'Select an existing unit using a unique identifier, then document the work.';
+ $('modal-description').textContent=mode==='unit'?'Register the vehicle once. Add an RO now or later.':'Find and select the correct unit using the universal search, then document the work.';
  $('action-modal').hidden=false;document.body.style.overflow='hidden';
  if(mode==='unit'){
   $('unit-save-ro').disabled=!canCreateRO();$('unit-save-ro').title=canCreateRO()?'Save unit and create a repair order':'This role can register Units but not create ROs';
@@ -168,7 +168,7 @@ $('add-ro-line').onclick=()=>{
  row.append(input,del);container.append(row);input.focus();
 };
 function saveRO(){
- modalError('');if(!roUnitId){modalError('Select an existing unit by an exact vehicle identifier before saving an RO.');return;}
+ modalError('');if(!roUnitId){modalError('Select a specific unit from universal search before saving an RO.');return;}
  const number=$('ro-number').value.trim(),description=$('ro-description').value.trim();
  if(!number){modalError('RO number cannot be blank. Use the next assigned number or enter a custom one.');return;}
  if(ros.some(r=>r.number.toLowerCase()===number.toLowerCase())){modalError('RO '+number+' already exists. Choose a unique number for this dealership.');return;}
