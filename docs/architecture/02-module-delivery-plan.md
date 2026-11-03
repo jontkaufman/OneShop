@@ -8,12 +8,14 @@ Deliver: recover legally usable editable prototype source **or explicitly rebuil
 Acceptance: git checkout builds from source; CI runs typecheck/lint/test; preview deploy is reproducible; environment points to explicitly named database project; no secrets in git; two browser sessions can sign in and sign out. Any demo or mock pages labeled as such.
 No production database mutation is justified by this architecture-doc PR.
 
+**Canonical business hierarchy locked:** Customer -> Unit (RV/vehicle) -> RO -> RO Line Item. The physical onsite visit is a related unit-linked record, not an extra display level. Historical ownership is effective-dated; RO records preserve their original customer context.
+
 ## Module 01 — SaaS foundation and shared operating records
 Dependencies: Gate 0.
-Backend: organizations, branches, memberships/branch roles, permissions, customer, unit, unit/customer relationship, onsite_visit, repair_order, service_job and audit events. Use tenant-safe FKs, constraints and RLS.
+Backend: organizations, branches, memberships/branch roles, permissions, customer, unit, unit/customer relationship, onsite_visit, repair_order, ro_line_item and audit events. Use tenant-safe FKs, constraints and RLS.
 Frontend: org/branch switch, invite/login shell, customer/unit search and create, visit start and multiple RO association, advisor ownership, RO overview with relevant unit + visit context.
 Tests: cross-tenant denied, branch permissions denied, same RV with two open ROs, owner changes preserve unit history, idempotent RO upserts, stable unit IDs.
-Outcome: **one authenticated dealer can find a unit, its visit, its separate ROs and the next responsible person**.
+Outcome: **one authenticated dealer can find a unit, its visit, its separate ROs, their line items, and the next responsible person**.
 Do not ship invoice posting, a map editor, or live CDK as part of Module 01.
 Detailed build contract: docs/modules/01-foundation-and-records.md.
 
@@ -68,7 +70,7 @@ Tests: time zones, overbooking rules (after explicit capacity policy), query loa
 Outcome: field pilot with reproducible workflow tests, correction loop and metrics.
 
 ## Module 09 — Customer scope, proposals and approvals
-Dependencies: service jobs and master records; informed by approved invoice-design baseline.
+Dependencies: RO line items and master records; informed by approved invoice-design baseline.
 Backend: findings/recommendations, variants, priced lines, presented document snapshots, customer decision (ACCEPT / DEFER / DECLINE / unanswered), paper-entry evidence, immutable authorizations, deduplicated routing to same/new draft RO.
 Frontend: concise gray-square shop documents, writer response transcription, mobile customer approval, next-visit follow-up.
 Tests: mutually exclusive variants, no charges for unselected recommendations, stale signature invalid, paper scan attached, accepted recommendation creates exactly one draft job, no auto-execution from request alone.
