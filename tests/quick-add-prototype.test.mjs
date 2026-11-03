@@ -44,3 +44,11 @@ test('prototype builds valid standalone HTML using shared tokens',()=>{
  const check=spawnSync(process.execPath,['--check',new URL('../prototypes/unit-ro-quick-add.js',import.meta.url).pathname],{encoding:'utf8'});
  assert.equal(check.status,0,check.stderr);
 });
+
+test('demo permissions allow any staff unit creation but restrict RO action',()=>{
+ assert.ok(js.includes("function canCreateRO()"));
+ assert.ok(js.includes("['service_writer','foreman']"));
+ assert.ok(js.includes("button.disabled=!allowed"));
+ assert.ok(js.includes("if(mode==='ro'&&!canCreateRO())"));
+ assert.ok(js.includes("$('unit-save').onclick=()=>saveUnit(false)"));
+});
