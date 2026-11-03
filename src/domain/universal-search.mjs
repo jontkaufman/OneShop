@@ -103,18 +103,19 @@ export function buildAuthorizedSearchDocuments(
    const linkedROs=roByUnit.get(id)??[];
    const customer=customersByUnit.get(id);
    const title=clean([unit.year,unit.make,unit.model].filter(Boolean).join(' '))||'Unit '+id;
-   const stock=clean(unit.stock_number??unit.stock);
-   const vin=clean(unit.vin);
+   const stock=allowed(grants,'stockRead')?clean(unit.stock_number??unit.stock):'';
+   const vin=allowed(grants,'vinRead')?clean(unit.vin):'';
+   const location=allowed(grants,'locationRead')?clean(unit.location):'';
    documents.push(row({
      kind:'unit',id,unitId:id,title,
-     summary:[stock&&'Stock '+stock,vin&&'VIN ···'+vin.slice(-6),unit.location].filter(Boolean).join('  ·  '),
+     summary:[stock&&'Stock '+stock,vin&&'VIN ···'+vin.slice(-6),location].filter(Boolean).join('  ·  '),
      fields:[
        field('unit_id',id,120),
        field('stock_number',stock,140),
        field('vin',vin,140),
        field('vin_last6',vin.slice(-6),100),
        field('unit_description',title,36),
-       field('location',unit.location,20),
+       field('location',location,20),
        customer&&field('customer_name',customer.display_name??customer.name,42),
        ...linkedROs.flatMap(ro=>[
          ...ro.fields.filter(f=>f&&f.key==='ro_number').map(f=>field('ro_number',f.value,85)),
