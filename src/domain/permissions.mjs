@@ -139,8 +139,11 @@ export function mayAssignPermission({actorAccess,actorIsOwner=false,targetIsSelf
  if(targetIsSelf)return false;
  // No delegated admin may grant permissions the admin does not possess.
  if(mode==='allow'&&!actorIsOwner&&!hasPermission(actorAccess,permission))return false;
- if(PERMISSIONS[permission].sensitive && mode==='allow'&&!actorIsOwner
-    &&!hasPermission(actorAccess,'payroll.manage'))return false;
+ const sensitiveManager=permission.startsWith('payroll.')?'payroll.manage'
+  :permission.startsWith('finance.')?'finance.manage'
+  :permission==='customer.contact.read'?'customer.manage':null;
+ if(PERMISSIONS[permission].sensitive&&mode==='allow'&&!actorIsOwner
+    &&sensitiveManager&&!hasPermission(actorAccess,sensitiveManager))return false;
  return true;
 }
 export function visibleModules(access){
