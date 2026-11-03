@@ -2,6 +2,14 @@
 Status: architecture sequencing proposal for review, not deployed functionality.
 Strategy: vertical slices, one module per reviewable PR/migration set, with role-focused UI and realistic end-to-end fixtures. Preserve the October operating requirements without implementing the entire product simultaneously.
 
+## Current highest-priority cross-module slice: Unit Intake → Porter → Receiving Team
+
+**User-confirmed November 3, 2026:** any authorized branch employee may register a unit; Service Writer owns the rich check-in workflow; each new workload requires a targeted actionable notification; a porter receives a complete unit/move card, and confirmed delivery notifies both requester and receiving person or role. The durable work-task + notification infrastructure is **cross-cutting** and must be implemented with the first move flow, not postponed until the old standalone communication module.
+
+Build smallest connected stages: (A) identity/tenant/canonical records, (B) SW check-in/visit event, (C) location type registry + porter role queue and move request/claim, (D) confirmed physical delivery + requester/receiver notification. The **advanced** map editor remains its dedicated module; its stable logical location/type contract is specified now so temporary routing fixtures cannot corrupt its future model.
+
+Current contract: [WF-05 Operational Handoffs and Notifications](../workflows/05-operational-handoffs-and-notifications.md). Workload ownership, notification persistence, team inbox, role/user permissions, routing fallbacks and idempotency are acceptance criteria for the first end-to-end pilot.
+
 ## Gate 0: repository and deployable application baseline (prerequisite)
 **Observed:** GitHub is documentation-only; the hosted OneShop prototype source, deployment pipeline and Supabase application wiring are not in this repository. Do not write production schema assuming that the hosted app is the repository's code.
 Deliver: recover legally usable editable prototype source **or explicitly rebuild** it; inventory routes/screens/state/code, identify reusable UX, document parity gaps; establish React+TypeScript build/test workflow, preview, environment separation and secure client setup; create one health/readiness page with verified Supabase access through publishable credentials.
