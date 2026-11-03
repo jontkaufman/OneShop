@@ -14,7 +14,7 @@ test('Users page has profile sections contact, payroll, position, permissions',(
  assert.ok(source.includes('data-page="modules"'));
 });
 test('role CRUD uses templates, copy before edit, and safe archive semantics',()=>{
- for(const term of ['createRoleTemplate','updateRoleTemplate','archiveRoleTemplate','role.permissions','Assigned employees must be moved'])
+ for(const term of ['createRoleTemplate','updateRoleTemplate','archiveRoleTemplate','role.permissions','assigned employees must be moved'])
   assert.ok(js.includes(term),'Missing '+term);
  assert.ok(js.includes('selectedRole()?.system'));
 });
