@@ -1,6 +1,8 @@
 # OneShop Quality and Verification Contract
 Status: proposed test strategy. A feature is not 'done' until demonstrable from source, database and UI.
 
+**Immediate test-first handoff requirement:** Execute the scenarios in [WF-05 Operational Handoffs and Notifications](../workflows/05-operational-handoffs-and-notifications.md). Required checks include: any authorized staff unit registration with later writer reuse; porter role queue notification; exclusive claim; requester completion notification; named technician or foreman fallback receiving notification; acknowledgement separate from read/completion; idempotency, blocked location and tenant/branch negative tests. The new pure policy tests in `tests/handoff.test.mjs` cover only deterministic routing and are **not** a substitute for DB, realtime or multiuser tests.
+
 ## Test layers
 - SQL schema integrity and migrations: fresh DB setup; scope-safe FK; uniqueness and idempotency; upgrade compatibility and preserved history.
 - Security/RLS: two organizations, two branches, staff roles, cross-tenant joins, direct RPC attempts, stored assets, search/export, client impersonation and privilege escalation. Include negative assertions.
