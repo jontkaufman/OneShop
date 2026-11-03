@@ -3,7 +3,7 @@ Status: design proposal; no schema or application code has been deployed. Change
 
 ## Architectural style
 Use a **modular monolith** initially: React + TypeScript frontend, typed data/command boundary, Supabase Auth/Postgres/Storage/Realtime backend. Domains share a deployment but have explicit owners and interfaces. Avoid premature microservices. Keep the hosted prototype as a separate, unverified artifact until editable source is recovered or rebuilt.
-Domains: identity/tenancy, customer/unit master, visit/RO/jobs, property setup, occupancy/moves/key custody, dispatch/handoffs/blockers, parts/warranty, communications/alerts, pickup/QC, scheduling, document/authorization, finances/reporting, integrations.
+Domains: identity/tenancy, customer/unit master, visits/ROs/RO-line-items, property setup, occupancy/moves/key custody, dispatch/handoffs/blockers, parts/warranty, communications/alerts, pickup/QC, scheduling, document/authorization, finances/reporting, integrations.
 Command handlers (transactional SQL functions or server endpoints) implement high-integrity writes. Simple authorized reads may use client data queries under RLS. Do not place move-claim, release, approval, posting, or tenant-admin integrity entirely in browser state.
 
 ## Tenant, branch and authorization model
@@ -12,6 +12,12 @@ Every tenant-owned row carries organization_id. Branch-scoped operational rows a
 Use role permissions for actions, not UI visibility. Example capabilities: site.configure, ro.read, ro.manage, job.assign, move.request, move.claim, location.confirm, qc.record, release.approve, financial.post. Branch and tenant membership gates still apply. Customer external links must use short-lived explicit scoped capabilities.
 RLS enabled on **all** exposed tables; default deny. Resolve tenant membership with trusted server-owned membership tables and auth.uid(), not raw_user_meta_data. Never expose privileged service-role or secret keys to browser bundles; publishable key is fine with correct RLS. Treat stored file object keys, Realtime channels, search, RPC, export and signed URLs as authorization boundaries too.
 Recommended security tests: impersonate two organizations and two branches; deny read, joins, storage download, RPC, realtime delivery, and ID-enumeration for other tenant. Audit admin impersonation, membership changes and role escalation. Ensure security-invoker views or otherwise restrict privileged views.
+
+## Canonical hierarchy contract (CONFIRMED)
+
+`Customer -> Unit (RV/vehicle) -> RO -> RO Line Item` is the business browsing, grouping and service-scope contract. One customer can display many units, a unit many ROs (including concurrent ROs), and each RO many line items. A line item is a single actionable RO service operation, not a loose part/price entry. Line-item components and assigned department tasks may be modeled beneath or attached to it.
+
+In physical storage, the Unit retains an independent durable identity and an **effective-dated** customer relationship; ROs retain a historical customer/bill-to snapshot and belong to exactly one unit. This permits resales, multiple responsible people, fleet ownership and history retention. The hierarchy must not be implemented as destructive ownership-based cascading deletion. Onsite visits are a separate unit-linked operational grouping across ROs, not a mandatory level between Unit and RO.
 
 ## Record ownership and relational outline
 organization(id,slug)
@@ -23,8 +29,8 @@ customer_contact / unit_ownership(organization_id,...)
 unit(id,organization_id,vin,stock_number,coach/chassis identifiers...)
 onsite_visit(id,organization_id,branch_id,unit_id,arrival_at,departure_at,release_state,advisor_id)
 repair_order(id,organization_id,branch_id,unit_id,visit_id,customer_id,advisor_id,ro_number,external_source,external_id)
-service_job(id,organization_id,branch_id,repair_order_id,job_number,execution_state)
-finding / recommendation (later, tied to stable unit+job lineage)
+ro_line_item(id,organization_id,branch_id,repair_order_id,line_number,description,execution_state)
+finding / recommendation (later, tied to stable unit+RO-line-item lineage)
 physical_location(id,organization_id,branch_id,type,code,capacity,retired_at)
 property_map(id,organization_id,branch_id,revision,background_file_key,status)
 map_placement(id,organization_id,branch_id,map_id,location_id?,geometry,revision)
