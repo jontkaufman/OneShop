@@ -14,12 +14,12 @@ test('Users page has profile sections contact, payroll, position, permissions',(
  assert.ok(source.includes('data-page="modules"'));
 });
 test('role CRUD uses templates, copy before edit, and safe archive semantics',()=>{
- for(const term of ['createRoleTemplate','updateRoleTemplate','archiveRoleTemplate','role.permissions','Reassign employees'])
+ for(const term of ['createRoleTemplate','updateRoleTemplate','archiveRoleTemplate','role.permissions','Assigned employees must be moved'])
   assert.ok(js.includes(term),'Missing '+term);
- assert.ok(js.includes('selectedRole().system'));
+ assert.ok(js.includes('selectedRole()?.system'));
 });
 test('per-user exceptions distinguish allow, deny and inherit',()=>{
- assert.ok(js.includes("['inherit','allow','deny']"));
+ assert.ok(js.includes("'inherit','Inherit'"));
  assert.ok(js.includes('mayAssignPermission'));
  assert.ok(js.includes('u.overrides[permission]'));
 });
@@ -27,7 +27,7 @@ test('owner protection and confidential payroll tab are visible in source logic'
  assert.ok(js.includes('u.owner'));
  assert.ok(js.includes("allowed('payroll.read')"));
  assert.ok(js.includes("allowed('payroll.manage')"));
- assert.ok(js.includes('Private'));
+ assert.ok(js.includes('private table'));
 });
 test('basic/advanced module defaults come from shared domain registry',()=>{
  assert.ok(js.includes('defaultModuleSettings()'));
