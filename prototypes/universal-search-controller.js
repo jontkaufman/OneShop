@@ -5,14 +5,13 @@
  */
 let globalSearchOpen=false,globalSearchMode='all',globalSearchResults=[];
 let globalSearchActiveIndex=-1,globalSearchPreviousFocus=null;
-const searchRoles = Object.freeze({
- service_writer:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:true,contactRead:true,roRead:true,workRead:true},
- porter:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:false,contactRead:false,roRead:false,workRead:false},
- technician:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:false,contactRead:false,roRead:true,workRead:true},
- sales:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:true,contactRead:true,roRead:true,workRead:false},
- foreman:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:false,contactRead:false,roRead:true,workRead:true},
- pdi:{unitRead:true,vinRead:true,stockRead:true,locationRead:true,customerRead:false,contactRead:false,roRead:true,workRead:true}
-});
+const searchRoles=Object.freeze(Object.fromEntries(
+ ['service_writer','porter','technician','sales','foreman','pdi'].map(role=>[
+  role,searchFieldGrants(effectivePermissions({
+   roles:[{id:role,...ROLE_TEMPLATES[role]}],modules:defaultModuleSettings()
+  }))
+ ])
+));
 const searchFieldLabels=Object.freeze({
  vin:'VIN',vin_last6:'VIN',stock_number:'Stock',unit_id:'Unit ID',
  customer_name:'Customer',phone:'Phone',email:'Email',ro_number:'RO',
